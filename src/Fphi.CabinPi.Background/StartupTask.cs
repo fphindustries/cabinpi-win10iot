@@ -6,6 +6,8 @@ using System.Net.Http;
 using Windows.ApplicationModel.Background;
 using System.Diagnostics;
 using Windows.System.Threading;
+using Microsoft.Extensions.DependencyInjection;
+using Fphi.CabinPi.Background.Fakes;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
 
@@ -15,8 +17,12 @@ namespace Fphi.CabinPi.Background
     {
         private BackgroundTaskDeferral _deferal;
         private IBackgroundTaskInstance _taskInstance;
+        private ServiceProvider _serviceProvider;
+        private SensorReader _sensorReader;
         private ThreadPoolTimer _periodicTimer;
         private volatile bool _cancelRequested = false;
+
+        private IServiceCollection _serviceCollection;
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
@@ -30,11 +36,27 @@ namespace Fphi.CabinPi.Background
 
             Debug.WriteLine($"{taskInstance.Task.Name} Starting");
 
+
             taskInstance.Canceled += TaskInstance_Canceled;
             _deferal = taskInstance.GetDeferral();
             _taskInstance = taskInstance;
 
+            //Set up DI
+            _serviceCollection = new ServiceCollection();
+            ConfigureServices(_serviceCollection);
+
+            _serviceProvider = _serviceCollection.BuildServiceProvider();
+
+            _sensorReader = _serviceProvider.GetService<SensorReader>();
+
             _periodicTimer = ThreadPoolTimer.CreatePeriodicTimer(new TimerElapsedHandler(OnTimer), TimeSpan.FromSeconds(5));
+        }
+
+        private void ConfigureServices(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddSingleton<ISensorFactory, FakeSensorFactory>();
+            serviceCollection.AddSingleton<ISensorDataStore, InMemoryDataStore>();
+            serviceCollection.AddSingleton<SensorReader>();
         }
 
         private void OnTimer(ThreadPoolTimer timer)
@@ -46,8 +68,8 @@ namespace Fphi.CabinPi.Background
             else
             {
                 Debug.WriteLine("OnTimer");
-
                 //Here we read all of the configured sensors, add them to the in-memory store, notify the UI that we have new data, and write it out to the remote influxdb
+                _sensorReader.ReadSensors();
             }
         }
 
