@@ -95,6 +95,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AppServiceTask.cs" />
     <Compile Include="Fakes\FakeSensorFactory.cs" />
     <Compile Include="Fakes\FakeSHT31d.cs" />
     <Compile Include="InMemoryDataStore.cs" />

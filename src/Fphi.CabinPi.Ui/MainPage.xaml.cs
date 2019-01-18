@@ -4,10 +4,12 @@ using LiveCharts.Uwp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.AppService;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -65,27 +67,29 @@ namespace Fphi.CabinPi.Ui
 
             _trend = 8;
 
-            _timer.Tick += (sender, o) =>
-            {
-                var r = new Random();
+            //_timer.Tick += (sender, o) =>
+            //{
+            //    var r = new Random();
 
-                _trend += (r.NextDouble() > 0.3 ? 1 : -1) * r.Next(0, 5);
-                LastHourSeries[0].Values.Add(new ObservableValue(_trend));
-                LastHourSeries[0].Values.RemoveAt(0);
-                SetReading();
-            };
-            _timer.Start();
+            //    _trend += (r.NextDouble() > 0.3 ? 1 : -1) * r.Next(0, 5);
+            //    LastHourSeries[0].Values.Add(new ObservableValue(_trend));
+            //    LastHourSeries[0].Values.RemoveAt(0);
+            //    SetReading();
+            //};
+            //_timer.Start();
 
             Vals = new ChartValues<double> { 5, 9, 8, 6, 1, 5, 7, 3, 6, 3 };
             Nan = double.NaN;
 
             DataContext = this;
+            SetupAppService();
         }
 
         public SeriesCollection LastHourSeries { get; set; }
         public ChartValues<double> Vals { get; set; }
         public double Nan { get; set; }
         public string TodaysDate = DateTime.Now.ToString("dd MMM yyyy");
+        private AppServiceConnection _backgroundAppService;
 
         public double LastReading
         {
@@ -120,6 +124,49 @@ namespace Fphi.CabinPi.Ui
         private void UpdateOnclick(object sender, RoutedEventArgs e)
         {
             TimePowerChart.Update(true);
+        }
+
+        private async void SetupAppService()
+        {
+            // find the installed application(s) that expose the app service PerimeterBreachService
+            var listing = await AppServiceCatalog.FindAppServiceProvidersAsync("CabinPiAppService");
+            var packageName = "";
+            // there may be cases where other applications could expose the same App Service Name, in our case
+            // we only have the one
+            if (listing.Count == 1)
+            {
+                packageName = listing[0].PackageFamilyName;
+            }
+            _backgroundAppService = new AppServiceConnection();
+            _backgroundAppService.AppServiceName = "CabinPiAppService";
+            _backgroundAppService.PackageFamilyName = packageName;
+            //open app service connection
+            var status = await _backgroundAppService.OpenAsync();
+
+            if (status != AppServiceConnectionStatus.Success)
+            {
+                //something went wrong
+                Debug.WriteLine("Could not connect to the App Service: " + status.ToString());
+            }
+            else
+            {
+                //add handler to receive app service messages (Perimiter messages)
+                _backgroundAppService.RequestReceived += BackgroundServiceRequestReceived;
+            }
+        }
+
+        private async void BackgroundServiceRequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                // if you are doing anything awaitable, you need to get a deferral
+
+                //var x = args.Request;
+                LastHourSeries[0].Values.Add(new ObservableValue((double)args.Request.Message["InteriorTempF"]));
+                LastHourSeries[0].Values.RemoveAt(0);
+                SetReading();
+
+            });
         }
     }
 }

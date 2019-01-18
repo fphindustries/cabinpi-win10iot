@@ -46,6 +46,11 @@
             <iot:Task Type="startup" />
           </BackgroundTasks>
         </Extension>
+        <uap:Extension Category="windows.appService" EntryPoint="Fphi.CabinPi.Background.AppServiceTask">
+
+          <uap:AppService Name="CabinPiAppService" />
+
+        </uap:Extension>
       </Extensions>
     </Application>
   </Applications>
