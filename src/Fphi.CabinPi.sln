@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fphi.CabinPi.Ui", "Fphi.CabinPi.Ui\Fphi.CabinPi.Ui.csproj", "{9C4BFBE8-1395-4240-9EA0-3323AF8638BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fphi.CabinPi.Ui2", "Fphi.CabinPi.Ui\Fphi.CabinPi.Ui2.csproj", "{9C4BFBE8-1395-4240-9EA0-3323AF8638BD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fphi.CabinPi.Background", "Fphi.CabinPi.Background\Fphi.CabinPi.Background.csproj", "{03498953-18F6-4D01-8223-87A80FA4A9EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fphi.CabinPi.Ui", "..\..\..\Source\Repos\App3\App3\Fphi.CabinPi.Ui.csproj", "{8DBB04A5-793E-4BC3-885B-4B55EEF01622}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,26 @@ Global
 		{03498953-18F6-4D01-8223-87A80FA4A9EB}.Release|x86.ActiveCfg = Release|x86
 		{03498953-18F6-4D01-8223-87A80FA4A9EB}.Release|x86.Build.0 = Release|x86
 		{03498953-18F6-4D01-8223-87A80FA4A9EB}.Release|x86.Deploy.0 = Release|x86
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Debug|ARM.ActiveCfg = Debug|ARM
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Debug|ARM.Build.0 = Debug|ARM
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Debug|ARM.Deploy.0 = Debug|ARM
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Debug|ARM64.ActiveCfg = Debug|x86
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Debug|x64.ActiveCfg = Debug|x64
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Debug|x64.Build.0 = Debug|x64
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Debug|x64.Deploy.0 = Debug|x64
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Debug|x86.ActiveCfg = Debug|x86
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Debug|x86.Build.0 = Debug|x86
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Debug|x86.Deploy.0 = Debug|x86
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Release|ARM.ActiveCfg = Release|ARM
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Release|ARM.Build.0 = Release|ARM
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Release|ARM.Deploy.0 = Release|ARM
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Release|ARM64.ActiveCfg = Release|x86
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Release|x64.ActiveCfg = Release|x64
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Release|x64.Build.0 = Release|x64
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Release|x64.Deploy.0 = Release|x64
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Release|x86.ActiveCfg = Release|x86
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Release|x86.Build.0 = Release|x86
+		{8DBB04A5-793E-4BC3-885B-4B55EEF01622}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
