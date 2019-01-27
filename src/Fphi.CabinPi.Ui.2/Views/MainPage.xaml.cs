@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Fphi.CabinPi.Ui.Views
 {
@@ -52,8 +53,18 @@ namespace Fphi.CabinPi.Ui.Views
             Vals = new ChartValues<double> { 5, 9, 8, 6, 1, 5, 7, 3, 6, 3 };
             Nan = double.NaN;
 
+            ForecastValues = new ChartValues<double> { 50, 90, 80, 60, 55, 67, 70};
+
             DataContext = this;
             SetupAppService();
+
+            string icon = String.Format("ms-appx:///Assets/Weather/{0}.png", "01d");
+
+            TempTextBlock.Text = (80 + "°F");
+            DescTextBlock.Text = "Sunny and nice...maybe you should be outside";
+            LocationTextBlock.Text = "Here";
+
+            ResultImage.Source = new BitmapImage(new Uri(icon, UriKind.Absolute));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -79,6 +90,7 @@ namespace Fphi.CabinPi.Ui.Views
         public SeriesCollection LastHourSeries { get; set; }
         public ChartValues<double> Vals { get; set; }
         public double Nan { get; set; }
+        public ChartValues<double> ForecastValues { get; set; }
         public string TodaysDate = DateTime.Now.ToString("dd MMM yyyy");
         private AppServiceConnection _backgroundAppService;
 
