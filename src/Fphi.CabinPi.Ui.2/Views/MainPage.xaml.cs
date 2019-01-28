@@ -59,12 +59,19 @@ namespace Fphi.CabinPi.Ui.Views
             SetupAppService();
 
             string icon = String.Format("ms-appx:///Assets/Weather/{0}.png", "01d");
+            string iconCat = String.Format("ms-appx:///Assets/Inside/{0}.png", "sleepingcat");
 
-            TempTextBlock.Text = (80 + "°F");
-            DescTextBlock.Text = "Sunny and nice...maybe you should be outside";
-            LocationTextBlock.Text = "Here";
+            InsideTempTextBlock.Text = (80 + "°F");
+            InsideDescTextBlock.Text = "Ah yeah...it's cozy in here";
+            InsideLocationTextBlock.Text = "Inside";
+            InsideImage.Source = new BitmapImage(new Uri(iconCat, UriKind.Absolute));
 
-            ResultImage.Source = new BitmapImage(new Uri(icon, UriKind.Absolute));
+
+            OutsideTempTextBlock.Text = (65 + "°F");
+            OutsideDescTextBlock.Text = "Sunny and nice...maybe you should be outside";
+            OutsideLocationTextBlock.Text = "Clam Cabin";
+            OutsideImage.Source = new BitmapImage(new Uri(icon, UriKind.Absolute));
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
