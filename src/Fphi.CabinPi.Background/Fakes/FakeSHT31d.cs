@@ -8,7 +8,7 @@ namespace Fphi.CabinPi.Background.Fakes
 {
     class FakeSHT31d : ISensor
     {
-        public IEnumerable<SensorReading> GetReadings()
+        public async Task<IEnumerable<SensorReading>> GetReadings()
         {
             Random rng = new Random();
             return new SensorReading[] {

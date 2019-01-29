@@ -8,6 +8,6 @@ namespace Fphi.CabinPi.Background
 {
     interface ISensor
     {
-        IEnumerable<SensorReading> GetReadings();
+        Task<IEnumerable<SensorReading>> GetReadings();
     }
 }

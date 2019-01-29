@@ -23,11 +23,11 @@ namespace Fphi.CabinPi.Background
             _sensors = _sensorFactory.GetSensors();
         }
 
-        public void ReadSensors()
+        public async Task ReadSensors()
         {
             foreach(var sensor in _sensors)
             {
-                var readings = sensor.GetReadings();
+                var readings = await sensor.GetReadings();
 
                 foreach(var reading in readings)
                 {

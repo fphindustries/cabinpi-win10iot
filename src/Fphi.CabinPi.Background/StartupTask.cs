@@ -8,6 +8,7 @@ using System.Diagnostics;
 using Windows.System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Fphi.CabinPi.Background.Fakes;
+using Fphi.CabinPi.Background.Sensors;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
 
@@ -54,7 +55,10 @@ namespace Fphi.CabinPi.Background
 
         private void ConfigureServices(IServiceCollection serviceCollection)
         {
+            //For now, to read from real sensors, switch to the SensorFactory
+            //serviceCollection.AddSingleton<ISensorFactory, SensorFactory>();
             serviceCollection.AddSingleton<ISensorFactory, FakeSensorFactory>();
+
             serviceCollection.AddSingleton<ISensorDataStore, InMemoryDataStore>();
             serviceCollection.AddSingleton<SensorReader>();
         }
