@@ -9,6 +9,8 @@ using Windows.System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Fphi.CabinPi.Background.Fakes;
 using Fphi.CabinPi.Background.Sensors;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
 
@@ -18,7 +20,7 @@ namespace Fphi.CabinPi.Background
     {
         private BackgroundTaskDeferral _deferal;
         private IBackgroundTaskInstance _taskInstance;
-        private ServiceProvider _serviceProvider;
+        private static ServiceProvider _serviceProvider;
         private SensorReader _sensorReader;
         private ThreadPoolTimer _periodicTimer;
         private volatile bool _cancelRequested = false;
@@ -48,22 +50,30 @@ namespace Fphi.CabinPi.Background
 
             _serviceProvider = _serviceCollection.BuildServiceProvider();
 
+            var configuration = _serviceProvider.GetService<ConfigurationService>();
+            Task.Run(configuration.InitAsync).Wait();
+
             _sensorReader = _serviceProvider.GetService<SensorReader>();
 
-            _periodicTimer = ThreadPoolTimer.CreatePeriodicTimer(new TimerElapsedHandler(OnTimer), TimeSpan.FromSeconds(5));
+
+            _periodicTimer = ThreadPoolTimer.CreatePeriodicTimer(async(timer) =>
+            {
+                await OnTimer(timer);
+            }, TimeSpan.FromSeconds(5));
         }
 
         private void ConfigureServices(IServiceCollection serviceCollection)
         {
             //For now, to read from real sensors, switch to the SensorFactory
             //serviceCollection.AddSingleton<ISensorFactory, SensorFactory>();
+            serviceCollection.AddSingleton<ConfigurationService>();
             serviceCollection.AddSingleton<ISensorFactory, FakeSensorFactory>();
 
             serviceCollection.AddSingleton<ISensorDataStore, InMemoryDataStore>();
             serviceCollection.AddSingleton<SensorReader>();
         }
 
-        private void OnTimer(ThreadPoolTimer timer)
+        private async Task OnTimer(ThreadPoolTimer timer)
         {
             if (_cancelRequested)
             {
@@ -71,9 +81,10 @@ namespace Fphi.CabinPi.Background
             }
             else
             {
+                
                 Debug.WriteLine("OnTimer");
                 //Here we read all of the configured sensors, add them to the in-memory store, notify the UI that we have new data, and write it out to the remote influxdb
-                _sensorReader.ReadSensors();
+                await _sensorReader.ReadSensors();
             }
         }
 
@@ -82,5 +93,7 @@ namespace Fphi.CabinPi.Background
             _cancelRequested = true;
             Debug.WriteLine($"{sender.Task.Name} Cancel Requested");
         }
+
+        internal static ServiceProvider ServiceProvider { get => _serviceProvider; }
     }
 }

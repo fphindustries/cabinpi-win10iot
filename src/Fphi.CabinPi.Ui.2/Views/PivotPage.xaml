@@ -18,7 +18,7 @@
             </i:Interaction.Behaviors>
             <PivotItem x:Uid="PivotItem_Main">
                 <Frame>
-                    <views:MainPage/>
+                    <views:MainPage Loaded="MainPage_Loaded"/>
                 </Frame>
             </PivotItem>
             <PivotItem x:Uid="PivotItem_Camera">

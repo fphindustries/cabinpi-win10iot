@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.17763.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
@@ -96,6 +96,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AppServiceTask.cs" />
+    <Compile Include="ConfigurationService.cs" />
     <Compile Include="Fakes\FakeSensorFactory.cs" />
     <Compile Include="Fakes\FakeSHT31d.cs" />
     <Compile Include="InMemoryDataStore.cs" />
@@ -149,6 +150,15 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.3</Version>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fphi.CabinPi.Common\Fphi.CabinPi.Common.csproj">
+      <Project>{8f9b1d5c-4be2-439d-9a5f-f1405d7aea2c}</Project>
+      <Name>Fphi.CabinPi.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '15.0' ">
     <VisualStudioVersion>15.0</VisualStudioVersion>

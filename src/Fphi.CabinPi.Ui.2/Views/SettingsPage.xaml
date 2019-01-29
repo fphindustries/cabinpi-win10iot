@@ -7,7 +7,7 @@
     Style="{StaticResource PageStyle}"
     xmlns:helper="using:Fphi.CabinPi.Ui.Helpers"
     xmlns:xaml="using:Windows.UI.Xaml"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Loaded="Page_Loaded">
     <Page.Resources>
         <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ElementTheme" />
     </Page.Resources>

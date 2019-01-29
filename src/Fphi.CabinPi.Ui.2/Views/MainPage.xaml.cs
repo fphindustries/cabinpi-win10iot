@@ -56,7 +56,7 @@ namespace Fphi.CabinPi.Ui.Views
             ForecastValues = new ChartValues<double> { 50, 90, 80, 60, 55, 67, 70};
 
             DataContext = this;
-            SetupAppService();
+            //SetupAppService();
 
             string icon = String.Format("ms-appx:///Assets/Weather/{0}.png", "01d");
             string iconCat = String.Format("ms-appx:///Assets/Inside/{0}.png", "sleepingcat");
@@ -99,7 +99,6 @@ namespace Fphi.CabinPi.Ui.Views
         public double Nan { get; set; }
         public ChartValues<double> ForecastValues { get; set; }
         public string TodaysDate = DateTime.Now.ToString("dd MMM yyyy");
-        private AppServiceConnection _backgroundAppService;
 
         public double LastReading
         {
@@ -128,48 +127,6 @@ namespace Fphi.CabinPi.Ui.Views
             TimePowerChart.Update(true);
         }
 
-        private async void SetupAppService()
-        {
-            // find the installed application(s) that expose the app service PerimeterBreachService
-            var listing = await AppServiceCatalog.FindAppServiceProvidersAsync("CabinPiAppService");
-            var packageName = "";
-            // there may be cases where other applications could expose the same App Service Name, in our case
-            // we only have the one
-            if (listing.Count == 1)
-            {
-                packageName = listing[0].PackageFamilyName;
-            }
-            _backgroundAppService = new AppServiceConnection();
-            _backgroundAppService.AppServiceName = "CabinPiAppService";
-            _backgroundAppService.PackageFamilyName = packageName;
-            //open app service connection
-            var status = await _backgroundAppService.OpenAsync();
-
-            if (status != AppServiceConnectionStatus.Success)
-            {
-                //something went wrong
-                Debug.WriteLine("Could not connect to the App Service: " + status.ToString());
-            }
-            else
-            {
-                //add handler to receive app service messages (Perimiter messages)
-                _backgroundAppService.RequestReceived += BackgroundServiceRequestReceived;
-            }
-        }
-
-        private async void BackgroundServiceRequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
-        {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-            {
-                // if you are doing anything awaitable, you need to get a deferral
-
-                //var x = args.Request;
-                LastHourSeries[0].Values.Add(new ObservableValue((double)args.Request.Message["InteriorTempF"]));
-                LastHourSeries[0].Values.RemoveAt(0);
-                SetReading();
-
-            });
-        }
     }
 }
 

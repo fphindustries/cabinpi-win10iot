@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Fphi.CabinPi.Background.Fakes;
+using Fphi.CabinPi.Background.Sensors;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,14 +16,44 @@ namespace Fphi.CabinPi.Background
     {
         private readonly ISensorFactory _sensorFactory;
         private readonly ISensorDataStore _dataStore;
-        private readonly IEnumerable<ISensor> _sensors;
+        private readonly ConfigurationService _configurationService;
+        private List<ISensor> _sensors;
+        private object reading;
 
-        public SensorReader(ISensorFactory sensorFactory, ISensorDataStore dataStore)
+        public SensorReader(ISensorFactory sensorFactory, ISensorDataStore dataStore, ConfigurationService configurationService)
         {
             _sensorFactory = sensorFactory;
             _dataStore = dataStore;
+            _configurationService = configurationService;
+            //_sensors = _sensorFactory.GetSensors();
 
-            _sensors = _sensorFactory.GetSensors();
+            _configurationService.PropertyChanged += ConfigurationChanged;
+            BuildSensorsFromConfiguration();
+        }
+
+        private void BuildSensorsFromConfiguration()
+        {
+            _sensors = new List<ISensor>();
+            foreach(var sensorConfiguration in _configurationService.BackgroundConfiguration.Sensors)
+            {
+                switch (sensorConfiguration.SensorId)
+                {
+                    case Common.SensorId.Sht31d:
+                        _sensors.Add(new SHT31dSensor() { Name = sensorConfiguration.Name }) ;
+                        break;
+                    case Common.SensorId.FakeSht31d:
+                        _sensors.Add(new FakeSHT31d() { Name = sensorConfiguration.Name });
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void ConfigurationChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            Debug.WriteLine("Configuration Changed");
+            BuildSensorsFromConfiguration();
         }
 
         public async Task ReadSensors()

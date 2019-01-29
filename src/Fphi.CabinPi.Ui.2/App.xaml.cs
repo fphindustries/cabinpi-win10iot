@@ -1,7 +1,7 @@
 ﻿using System;
 
 using Fphi.CabinPi.Ui.Services;
-
+using Fphi.CabinPi.Ui2.Services;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -26,6 +26,7 @@ namespace Fphi.CabinPi.Ui
 
             // Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
             _activationService = new Lazy<ActivationService>(CreateActivationService);
+
         }
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)

@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 using Fphi.CabinPi.Ui.Helpers;
 using Fphi.CabinPi.Ui.Services;
-
+using Fphi.CabinPi.Ui2.Services;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -35,13 +35,12 @@ namespace Fphi.CabinPi.Ui.Views
 
         public SettingsPage()
         {
-            Loaded += SettingsPage_Loaded;
+            //Loaded += SettingsPage_Loaded;
             InitializeComponent();
         }
 
         private void SettingsPage_Loaded(object sender, RoutedEventArgs e)
         {
-            Initialize();
         }
 
         private void Initialize()
@@ -83,5 +82,13 @@ namespace Fphi.CabinPi.Ui.Views
         }
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+ 
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            Initialize();
+            await AppService.Instance.RequestConfigurationAsync();
+
+        }
     }
 }

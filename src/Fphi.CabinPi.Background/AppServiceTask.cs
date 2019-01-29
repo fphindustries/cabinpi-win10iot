@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fphi.CabinPi.Common;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -9,6 +10,8 @@ using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace Fphi.CabinPi.Background
 {
@@ -41,7 +44,7 @@ namespace Fphi.CabinPi.Background
             Connections.Add(_connectionGuid, _connection);
 
             // listen for incoming app service requests
-            _connection.RequestReceived += ConnectionRequestReceived;
+            _connection.RequestReceived += RequestReceived;
             _connection.ServiceClosed += ConnectionOnServiceClosed;
         }
 
@@ -51,8 +54,27 @@ namespace Fphi.CabinPi.Background
             RemoveConnection(_connectionGuid);
         }
 
-        private void ConnectionRequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+        private async void RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
+
+            foreach(var messageKey in args.Request.Message.Keys)
+            {
+                Debug.WriteLine($"Background Task RequestReceived: {messageKey}");
+
+                switch (messageKey)
+                {
+                    case AppServiceMessages.RequestConfiguration:
+                        //Send current configuration
+                        var configurationService = StartupTask.ServiceProvider.GetService<ConfigurationService>();
+                        ValueSet message = new ValueSet();
+                        message.Add(AppServiceMessages.Configuration, JsonConvert.SerializeObject(configurationService.BackgroundConfiguration));
+                        await BroadcastMessage(message);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
 
         }
 

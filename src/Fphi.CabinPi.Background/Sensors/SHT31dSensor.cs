@@ -29,6 +29,8 @@ namespace Fphi.CabinPi.Background.Sensors
         private const ushort SHT31_STATUS_HEATER_ACTIVE = 0x2000;
         private const ushort SHT31_STATUS_ALERT_PENDING = 0x8000;
 
+        public string Name { get; set; }
+
         public async Task<IEnumerable<SensorReading>> GetReadings()
         {
             I2cDevice sht31d = null;
@@ -78,21 +80,21 @@ namespace Fphi.CabinPi.Background.Sensors
                 new SensorReading
                 {
                     Name="TemperatureC",
-                     Sensor="SHT31d",
+                     Sensor=Name,
                      Time=DateTime.UtcNow,
                      Value=temperatureC
                 },
                 new SensorReading
                 {
                     Name="TemperatureF",
-                     Sensor="SHT31d",
+                     Sensor=Name,
                      Time=DateTime.UtcNow,
                      Value=temperatureF
                 },
                 new SensorReading
                 {
                     Name="Humidity",
-                     Sensor="SHT31d",
+                     Sensor=Name,
                      Time=DateTime.UtcNow,
                      Value=humidity
                 }

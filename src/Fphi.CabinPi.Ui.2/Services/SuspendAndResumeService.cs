@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
-
+using Fphi.CabinPi.Common;
 using Fphi.CabinPi.Ui.Activation;
 using Fphi.CabinPi.Ui.Helpers;
 

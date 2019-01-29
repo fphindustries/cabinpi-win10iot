@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-
 using Windows.Storage;
 using Windows.Storage.Streams;
 
-namespace Fphi.CabinPi.Ui.Helpers
+namespace Fphi.CabinPi.Common
 {
     // Use these extension methods to store and retrieve local and roaming app data
     // More details regarding storing and retrieving app data at https://docs.microsoft.com/windows/uwp/app-settings/store-and-retrieve-app-data
@@ -70,7 +72,7 @@ namespace Fphi.CabinPi.Ui.Helpers
 
             if (string.IsNullOrEmpty(fileName))
             {
-                throw new ArgumentException("ExceptionSettingsStorageExtensionsFileNameIsNullOrEmpty".GetLocalized(), nameof(fileName));
+                throw new ArgumentException("ExceptionSettingsStorageExtensionsFileNameIsNullOrEmpty", nameof(fileName));
             }
 
             var storageFile = await folder.CreateFileAsync(fileName, options);
