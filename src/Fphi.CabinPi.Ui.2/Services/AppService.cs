@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
 
-namespace Fphi.CabinPi.Ui2.Services
+namespace Fphi.CabinPi.Ui.Services
 {
     class AppService
     {

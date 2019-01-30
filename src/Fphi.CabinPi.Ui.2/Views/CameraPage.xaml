@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Style="{StaticResource PageStyle}"
     xmlns:controls="using:Fphi.CabinPi.Ui.Controls"
+        DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Camera}"
     mc:Ignorable="d">
     <Grid x:Name="ContentArea">
         <Grid
