@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using Fphi.CabinPi.Ui.Activation;
 using Fphi.CabinPi.Ui.Helpers;
-
+using Fphi.CabinPi.Ui.ViewModels;
 using Windows.ApplicationModel.Activation;
 using Windows.System;
 using Windows.UI.Core;
@@ -26,6 +26,7 @@ namespace Fphi.CabinPi.Ui.Services
         public static readonly KeyboardAccelerator AltLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
 
         public static readonly KeyboardAccelerator BackKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
+        private ViewModelLocator _locator;
 
         public ActivationService(App app, Type defaultNavItem, Lazy<UIElement> shell = null)
         {
@@ -36,6 +37,7 @@ namespace Fphi.CabinPi.Ui.Services
 
         public async Task ActivateAsync(object activationArgs)
         {
+            _locator = (ViewModelLocator)Application.Current.Resources["ViewModelLocator"];
             if (IsInteractive(activationArgs))
             {
                 // Initialize things like registering background task before the app is loaded
@@ -115,12 +117,14 @@ namespace Fphi.CabinPi.Ui.Services
 
         private async Task InitializeAsync()
         {
-            await ThemeSelectorService.InitializeAsync();
+            await _locator.ThemeSelectorService.InitializeAsync();
         }
 
         private async Task StartupAsync()
         {
-            await ThemeSelectorService.SetRequestedThemeAsync();
+            await _locator.ThemeSelectorService.SetRequestedThemeAsync();
+
+            await _locator.AppService.SetupAppServiceAsync();
         }
 
         private IEnumerable<ActivationHandler> GetActivationHandlers()

@@ -1,9 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Fphi.CabinPi.Ui.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Fphi.CabinPi.Ui.ViewModels
 {
@@ -15,7 +11,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
     public class ViewModelLocator
     {
         private IServiceCollection _serviceCollection;
-        private ServiceProvider _serviceProvider;
+        private readonly ServiceProvider _serviceProvider;
 
         public ViewModelLocator()
         {
@@ -26,6 +22,8 @@ namespace Fphi.CabinPi.Ui.ViewModels
 
         }
 
+        public ServiceProvider ServiceProvider => _serviceProvider;
+
         private void ConfigureServices(IServiceCollection serviceCollection)
         {
             //TODO: Verify that these are scoped appropriately
@@ -35,15 +33,22 @@ namespace Fphi.CabinPi.Ui.ViewModels
             serviceCollection.AddSingleton<MainViewModel>();
             serviceCollection.AddSingleton<PivotViewModel>();
             serviceCollection.AddSingleton<SettingsViewModel>();
+
+            serviceCollection.AddSingleton<AppService>();
+            serviceCollection.AddSingleton<ThemeSelectorService>();
         }
 
-        //The blow properties are what each page actually bind to to get their VMs
+        //The below properties are what each page actually bind to to get their VMs
         public CameraViewModel Camera => _serviceProvider.GetService<CameraViewModel>();
         public ImageGalleryDetailViewModel ImageGalleryDetail => _serviceProvider.GetService<ImageGalleryDetailViewModel>();
         public ImageGalleryViewModel ImageGallery => _serviceProvider.GetService<ImageGalleryViewModel>();
         public MainViewModel Main => _serviceProvider.GetService<MainViewModel>();
         public PivotViewModel Pivot => _serviceProvider.GetService<PivotViewModel>();
         public SettingsViewModel Settings => _serviceProvider.GetService<SettingsViewModel>();
+
+        //General Services
+        public AppService AppService => _serviceProvider.GetService<AppService>();
+        public ThemeSelectorService ThemeSelectorService => _serviceProvider.GetService<ThemeSelectorService>();
 
     }
 }

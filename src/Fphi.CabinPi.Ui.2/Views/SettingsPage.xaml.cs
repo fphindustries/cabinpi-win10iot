@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 
 using Fphi.CabinPi.Ui.Helpers;
 using Fphi.CabinPi.Ui.Services;
+using Fphi.CabinPi.Ui.ViewModels;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -12,82 +13,18 @@ namespace Fphi.CabinPi.Ui.Views
 {
     // TODO WTS: Add other settings as necessary. For help see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/pages/settings-codebehind.md
     // TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
-    public sealed partial class SettingsPage : Page, INotifyPropertyChanged
+    public sealed partial class SettingsPage : Page
     {
-        private ElementTheme _elementTheme = ThemeSelectorService.Theme;
-
-        public ElementTheme ElementTheme
-        {
-            get { return _elementTheme; }
-
-            set { Set(ref _elementTheme, value); }
-        }
-
-        private string _versionDescription;
-
-        public string VersionDescription
-        {
-            get { return _versionDescription; }
-
-            set { Set(ref _versionDescription, value); }
-        }
+        public SettingsViewModel ViewModel => this.DataContext as SettingsViewModel;
 
         public SettingsPage()
         {
-            //Loaded += SettingsPage_Loaded;
             InitializeComponent();
         }
 
-        private void SettingsPage_Loaded(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void Initialize()
-        {
-            VersionDescription = GetVersionDescription();
-        }
-
-        private string GetVersionDescription()
-        {
-            var appName = "AppDisplayName".GetLocalized();
-            var package = Package.Current;
-            var packageId = package.Id;
-            var version = packageId.Version;
-
-            return $"{appName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
-        }
-
-        private async void ThemeChanged_CheckedAsync(object sender, RoutedEventArgs e)
-        {
-            var param = (sender as RadioButton)?.CommandParameter;
-
-            if (param != null)
-            {
-                await ThemeSelectorService.SetThemeAsync((ElementTheme)param);
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
-        {
-            if (Equals(storage, value))
-            {
-                return;
-            }
-
-            storage = value;
-            OnPropertyChanged(propertyName);
-        }
-
-        private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
- 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            Initialize();
-            await AppService.Instance.RequestConfigurationAsync();
-
+            await ViewModel.InitializeAsync();
         }
     }
 }

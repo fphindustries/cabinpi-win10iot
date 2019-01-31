@@ -124,6 +124,7 @@
     <Compile Include="Helpers\ImagesNavigationHelper.cs" />
     <Compile Include="Helpers\IPivotPage.cs" />
     <Compile Include="Helpers\PivotItemExtensions.cs" />
+    <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Models\SampleImage.cs" />
     <Compile Include="Models\SampleOrder.cs" />
     <Compile Include="Services\ActivationService.cs" />

@@ -8,27 +8,15 @@ using Windows.Foundation.Collections;
 
 namespace Fphi.CabinPi.Ui.Services
 {
-    class AppService
+    public class AppService
     {
         private AppServiceConnection _backgroundAppService;
-        private static AppService _instance;
 
-        private AppService()
+        public AppService()
         {
 
         }
 
-        public static AppService Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new AppService();
-                }
-                return _instance;
-            }
-        }
 
         public async Task SetupAppServiceAsync()
         {
