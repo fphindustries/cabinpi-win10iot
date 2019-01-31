@@ -123,6 +123,7 @@
     <Compile Include="Helpers\PivotItemExtensions.cs" />
     <Compile Include="Models\SampleImage.cs" />
     <Compile Include="Models\SampleOrder.cs" />
+    <Compile Include="Models\Tempature.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultLaunchActivationHandler.cs" />
     <Compile Include="Services\AppService.cs" />
