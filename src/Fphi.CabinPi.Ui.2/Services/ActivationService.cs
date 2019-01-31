@@ -118,6 +118,8 @@ namespace Fphi.CabinPi.Ui.Services
         private async Task InitializeAsync()
         {
             await _locator.ThemeSelectorService.InitializeAsync();
+            await _locator.SettingsService.InitializeAsync();
+
         }
 
         private async Task StartupAsync()
