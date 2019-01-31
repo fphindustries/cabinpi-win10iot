@@ -34,7 +34,7 @@ namespace Fphi.CabinPi.Background
         private void BuildSensorsFromConfiguration()
         {
             _sensors = new List<ISensor>();
-            foreach(var sensorConfiguration in _configurationService.BackgroundConfiguration.Sensors)
+            foreach(var sensorConfiguration in _configurationService.BackgroundConfiguration.Sensors.Where(s => s.Enabled))
             {
                 switch (sensorConfiguration.SensorId)
                 {

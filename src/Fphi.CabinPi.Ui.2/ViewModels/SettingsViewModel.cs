@@ -1,7 +1,9 @@
-﻿using Fphi.CabinPi.Ui.Helpers;
+﻿using Fphi.CabinPi.Common;
+using Fphi.CabinPi.Ui.Helpers;
 using Fphi.CabinPi.Ui.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,11 +18,15 @@ namespace Fphi.CabinPi.Ui.ViewModels
         private ElementTheme _elementTheme;
         private readonly ThemeSelectorService _themeService;
         private readonly AppService _appService;
+        private readonly DataService _dataService;
 
-        public SettingsViewModel(ThemeSelectorService themeService, AppService appService)
+        public ObservableCollection<SensorConfiguration> SensorConfigurations => _dataService.SensorConfigurations;
+
+        public SettingsViewModel(ThemeSelectorService themeService, AppService appService, DataService dataService)
         {
             _themeService = themeService;
             _appService = appService;
+            _dataService = dataService;
             _elementTheme = _themeService.Theme;
         }
 
@@ -58,6 +64,25 @@ namespace Fphi.CabinPi.Ui.ViewModels
 
                 return _switchThemeCommand;
             }
+        }
+
+        private ICommand _saveSettingsCommand;
+        public ICommand SaveSettingsCommand
+        {
+            get
+            {
+                if(_saveSettingsCommand == null)
+                {
+                    _saveSettingsCommand = new RelayCommand(OnSaveSettings);
+                }
+                return _saveSettingsCommand;
+            }
+
+        }
+
+        private async void OnSaveSettings()
+        {
+            await _appService.SendConfigurationAsync();
         }
 
         public SettingsViewModel()

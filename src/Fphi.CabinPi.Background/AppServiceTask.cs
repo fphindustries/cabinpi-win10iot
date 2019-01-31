@@ -56,8 +56,9 @@ namespace Fphi.CabinPi.Background
 
         private async void RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
+            var configurationService = StartupTask.ServiceProvider.GetService<ConfigurationService>();
 
-            foreach(var messageKey in args.Request.Message.Keys)
+            foreach (var messageKey in args.Request.Message.Keys)
             {
                 Debug.WriteLine($"Background Task RequestReceived: {messageKey}");
 
@@ -65,12 +66,14 @@ namespace Fphi.CabinPi.Background
                 {
                     case AppServiceMessages.RequestConfiguration:
                         //Send current configuration
-                        var configurationService = StartupTask.ServiceProvider.GetService<ConfigurationService>();
                         ValueSet message = new ValueSet();
                         message.Add(AppServiceMessages.Configuration, JsonConvert.SerializeObject(configurationService.BackgroundConfiguration));
                         await BroadcastMessage(message);
                         break;
-
+                    case AppServiceMessages.Configuration:
+                        var config = JsonConvert.DeserializeObject<BackgroundConfiguration>(args.Request.Message[messageKey].ToString());
+                        await configurationService.SetConfiguration(config);
+                        break;
                     default:
                         break;
                 }
