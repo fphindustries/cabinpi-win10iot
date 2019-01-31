@@ -36,6 +36,9 @@ namespace Fphi.CabinPi.Ui.ViewModels
 
             serviceCollection.AddSingleton<AppService>();
             serviceCollection.AddSingleton<ThemeSelectorService>();
+
+            //TODO: for design time editing, need to extract an interface
+            serviceCollection.AddSingleton<DataService>();
         }
 
         //The below properties are what each page actually bind to to get their VMs

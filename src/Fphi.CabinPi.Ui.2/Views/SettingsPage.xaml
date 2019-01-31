@@ -7,6 +7,7 @@
     Style="{StaticResource PageStyle}"
     xmlns:helper="using:Fphi.CabinPi.Ui.Helpers"
     xmlns:xaml="using:Windows.UI.Xaml"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Settings}"
     mc:Ignorable="d" Loaded="Page_Loaded" >
     <Page.Resources>
@@ -73,6 +74,22 @@
                     x:Uid="Settings_PrivacyTermsLink"
                     Margin="{StaticResource XSmallTopMargin}" />
             </StackPanel>
+            <TextBlock
+                Style="{ThemeResource SubtitleTextBlockStyle}" Text="Sensors" />
+            <controls:DataGrid
+                ItemsSource="{x:Bind ViewModel.SensorConfigurations}"
+                AutoGenerateColumns="False"
+                GridLinesVisibility="Horizontal">
+                <controls:DataGrid.Columns>
+                    <!--TODO WTS:
+                    Remove this column definitions and define columns for your data.
+                    Consider adding header properties to Resources.resw-->
+                    <controls:DataGridTextColumn Header="Sensor" Binding="{Binding Name}" />
+                    <controls:DataGridTextColumn Header="Readings" Binding="{Binding SensorReadingName}"  />
+                    <controls:DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Enabled}" />
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
+            <Button Command="{Binding SaveSettingsCommand}">Save</Button>
         </StackPanel>
     </Grid>
 </Page>

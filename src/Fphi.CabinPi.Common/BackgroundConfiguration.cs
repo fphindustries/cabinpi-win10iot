@@ -8,7 +8,7 @@ namespace Fphi.CabinPi.Common
 {
     public class BackgroundConfiguration
     {
-        public IEnumerable<SensorConfiguration> Sensors { get; set; }
+        public List<SensorConfiguration> Sensors { get; set; }
 
         public BackgroundConfiguration()
         {

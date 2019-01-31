@@ -1,20 +1,25 @@
 ﻿using Fphi.CabinPi.Common;
+using Fphi.CabinPi.Ui.Helpers;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 
 namespace Fphi.CabinPi.Ui.Services
 {
-    public class AppService
+    public class AppService : Observable
     {
         private AppServiceConnection _backgroundAppService;
+        private readonly DataService _dataService;
 
-        public AppService()
+        public AppService(DataService dataService)
         {
-
+            _dataService = dataService;
         }
 
 
@@ -59,7 +64,7 @@ namespace Fphi.CabinPi.Ui.Services
                     case AppServiceMessages.Configuration:
                         //Send current configuration
                         var configuration = JsonConvert.DeserializeObject<BackgroundConfiguration>(args.Request.Message[messageKey].ToString());
-                        //TODO: Put the configuration somewhere where it can be bound to the settings page
+                        await ValidateConfigurationAsync(configuration);
                         break;
 
                     default:
@@ -68,11 +73,53 @@ namespace Fphi.CabinPi.Ui.Services
             }
         }
 
+        public async Task SendConfigurationAsync()
+        {
+            var config = new BackgroundConfiguration();
+            config.Sensors = _dataService.SensorConfigurations.ToList();
+
+            ValueSet message = new ValueSet();
+            message.Add(AppServiceMessages.Configuration, JsonConvert.SerializeObject(config));
+            await _backgroundAppService.SendMessageAsync(message);
+        }
+
         public async Task RequestConfigurationAsync()
         {
             ValueSet message = new ValueSet();
             message.Add(AppServiceMessages.RequestConfiguration, null);
             await _backgroundAppService.SendMessageAsync(message);
         }
+
+        /// <summary>
+        /// Verifies that the configuration contains all known sensors. During first start up
+        /// or after new sensors are added the configuration will be out of date.
+        /// </summary>
+        /// <param name="configuration"></param>
+        private async Task ValidateConfigurationAsync(BackgroundConfiguration configuration)
+        {
+            List<SensorConfiguration> knownSensors = new List<SensorConfiguration>()
+            {
+                new SensorConfiguration{ Enabled=false, SensorId= SensorId.Sht31d, SensorReading= SensorReading.InteriorTemperaturAndHumidity },
+                new SensorConfiguration{ Enabled=false, SensorId= SensorId.FakeSht31d, SensorReading= SensorReading.InteriorTemperaturAndHumidity }
+            };
+
+            foreach (var knownSensor in knownSensors)
+            {
+                if (!configuration.Sensors.Any(s => s.SensorId == knownSensor.SensorId))
+                {
+                    configuration.Sensors.Add(knownSensor);
+                }
+            }
+
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+             {
+                 _dataService.SensorConfigurations.Clear();
+                 foreach (var sensorConfig in configuration.Sensors)
+                 {
+                     _dataService.SensorConfigurations.Add(sensorConfig);
+                 }
+             });
+        }
+
     }
 }
