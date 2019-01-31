@@ -10,18 +10,18 @@ using Windows.UI.Xaml;
 
 namespace Fphi.CabinPi.Ui.Services
 {
-    public static class ThemeSelectorService
+    public class ThemeSelectorService
     {
         private const string SettingsKey = "AppBackgroundRequestedTheme";
 
-        public static ElementTheme Theme { get; set; } = ElementTheme.Default;
+        public ElementTheme Theme { get; set; } = ElementTheme.Default;
 
-        public static async Task InitializeAsync()
+        public async Task InitializeAsync()
         {
             Theme = await LoadThemeFromSettingsAsync();
         }
 
-        public static async Task SetThemeAsync(ElementTheme theme)
+        public async Task SetThemeAsync(ElementTheme theme)
         {
             Theme = theme;
 
@@ -29,7 +29,7 @@ namespace Fphi.CabinPi.Ui.Services
             await SaveThemeInSettingsAsync(Theme);
         }
 
-        public static async Task SetRequestedThemeAsync()
+        public async Task SetRequestedThemeAsync()
         {
             foreach (var view in CoreApplication.Views)
             {
@@ -43,7 +43,7 @@ namespace Fphi.CabinPi.Ui.Services
             }
         }
 
-        private static async Task<ElementTheme> LoadThemeFromSettingsAsync()
+        private async Task<ElementTheme> LoadThemeFromSettingsAsync()
         {
             ElementTheme cacheTheme = ElementTheme.Default;
             string themeName = await ApplicationData.Current.LocalSettings.ReadAsync<string>(SettingsKey);
@@ -56,7 +56,7 @@ namespace Fphi.CabinPi.Ui.Services
             return cacheTheme;
         }
 
-        private static async Task SaveThemeInSettingsAsync(ElementTheme theme)
+        private async Task SaveThemeInSettingsAsync(ElementTheme theme)
         {
             await ApplicationData.Current.LocalSettings.SaveAsync(SettingsKey, theme.ToString());
         }

@@ -7,7 +7,8 @@
     Style="{StaticResource PageStyle}"
     xmlns:helper="using:Fphi.CabinPi.Ui.Helpers"
     xmlns:xaml="using:Windows.UI.Xaml"
-    mc:Ignorable="d" Loaded="Page_Loaded">
+    DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Settings}"
+    mc:Ignorable="d" Loaded="Page_Loaded" >
     <Page.Resources>
         <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ElementTheme" />
     </Page.Resources>
@@ -22,31 +23,31 @@
                     x:Uid="Settings_Theme" />
 
                 <StackPanel Margin="{StaticResource XSmallTopMargin}">
-                    <RadioButton 
-                        x:Uid="Settings_Theme_Light" 
-                        GroupName="AppTheme" 
-                        Checked="ThemeChanged_CheckedAsync" 
-                        IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
+                    <RadioButton
+                        x:Uid="Settings_Theme_Light"
+                        GroupName="AppTheme"
+                        IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
+                        Command="{x:Bind ViewModel.SwitchThemeCommand}"
                         FontSize="15">
                         <RadioButton.CommandParameter>
                             <xaml:ElementTheme>Light</xaml:ElementTheme>
-                        </RadioButton.CommandParameter> 
+                        </RadioButton.CommandParameter>
                     </RadioButton>
-                    <RadioButton 
-                        x:Uid="Settings_Theme_Dark" 
+                    <RadioButton
+                        x:Uid="Settings_Theme_Dark"
                         GroupName="AppTheme"
-                        Checked="ThemeChanged_CheckedAsync" 
-                        IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
+                        IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
+                        Command="{x:Bind ViewModel.SwitchThemeCommand}"
                         FontSize="15">
                         <RadioButton.CommandParameter>
                             <xaml:ElementTheme>Dark</xaml:ElementTheme>
                         </RadioButton.CommandParameter>
                     </RadioButton>
-                    <RadioButton 
+                    <RadioButton
                         x:Uid="Settings_Theme_Default"
                         GroupName="AppTheme"
-                        Checked="ThemeChanged_CheckedAsync"
-                        IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
+                        IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
+                        Command="{x:Bind ViewModel.SwitchThemeCommand}"
                         FontSize="15">
                         <RadioButton.CommandParameter>
                             <xaml:ElementTheme>Default</xaml:ElementTheme>
@@ -56,12 +57,12 @@
             </StackPanel>
 
             <TextBlock
-                    x:Uid="Settings_About"
-                    Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                x:Uid="Settings_About"
+                Style="{ThemeResource SubtitleTextBlockStyle}" />
 
             <StackPanel Margin="{StaticResource XSmallTopMargin}">
                 <TextBlock
-                    Text="{x:Bind VersionDescription, Mode=OneWay}"
+                    Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}"
                     Style="{ThemeResource BodyTextBlockStyle}" />
                 <TextBlock
                     x:Uid="Settings_AboutDescription"
@@ -69,7 +70,7 @@
                     Style="{ThemeResource BodyTextBlockStyle}" />
 
                 <HyperlinkButton
-                    x:Uid="Settings_PrivacyTermsLink" 
+                    x:Uid="Settings_PrivacyTermsLink"
                     Margin="{StaticResource XSmallTopMargin}" />
             </StackPanel>
         </StackPanel>

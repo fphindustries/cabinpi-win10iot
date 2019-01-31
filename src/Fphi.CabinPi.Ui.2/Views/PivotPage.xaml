@@ -9,6 +9,7 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:model="using:Fphi.CabinPi.Ui.Models"
     xmlns:views="using:Fphi.CabinPi.Ui.Views"
+    DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Pivot}"
     mc:Ignorable="d">
 
     <Grid>

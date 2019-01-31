@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Fphi.CabinPi.Ui.Models"
     KeyDown="OnPageKeyDown"
+    DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=ImageGalleryDetail}"
     mc:Ignorable="d">
 
     <Page.Resources>

@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fphi.CabinPi.Background", "Fphi.CabinPi.Background\Fphi.CabinPi.Background.csproj", "{03498953-18F6-4D01-8223-87A80FA4A9EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fphi.CabinPi.Ui2", "Fphi.CabinPi.Ui.2\Fphi.CabinPi.Ui2.csproj", "{8DBB04A5-793E-4BC3-885B-4B55EEF01622}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fphi.CabinPi.Ui", "Fphi.CabinPi.Ui.2\Fphi.CabinPi.Ui.csproj", "{8DBB04A5-793E-4BC3-885B-4B55EEF01622}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fphi.CabinPi.Common", "Fphi.CabinPi.Common\Fphi.CabinPi.Common.csproj", "{8F9B1D5C-4BE2-439D-9A5F-F1405D7AEA2C}"
 EndProject

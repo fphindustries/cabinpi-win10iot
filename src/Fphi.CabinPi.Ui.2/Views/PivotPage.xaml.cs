@@ -1,4 +1,4 @@
-﻿using Fphi.CabinPi.Ui2.Services;
+﻿using Fphi.CabinPi.Ui.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -26,8 +26,7 @@ namespace Fphi.CabinPi.Ui.Views
 
         private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            //Init Background App Service
-            await AppService.Instance.SetupAppServiceAsync();
+            
 
         }
     }
