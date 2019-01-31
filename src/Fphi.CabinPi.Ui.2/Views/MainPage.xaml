@@ -43,7 +43,6 @@
             <TextBlock Grid.Row="0" TextAlignment="Center" Padding="10, 10, 0, 5" Foreground="White" FontSize="18">
                    Current
             </TextBlock>
-            <TextBlock Grid.Row="1" TextAlignment="Center" Foreground="#59FFFFFF" Padding="0,0,0,20" Text="{x:Bind TodaysDate, Mode=OneWay}"></TextBlock>
             <lvc:CartesianChart Grid.Row="2" Margin="0, 0, 0, 0" Series="{Binding LastHourSeries}" Hoverable="False" DataTooltip="{x:Null}">
                 <!--<lvc:CartesianChart.AxisX>
                     --><!--a small visual improvement, lets hide the first points (x = 0, x=1) to get better animations--><!--
@@ -89,8 +88,7 @@
             <TextBlock Grid.Row="0" TextAlignment="Center" Padding="10, 10, 0, 5" Foreground="White" FontSize="18">
                     Time Power
             </TextBlock>
-            <TextBlock Grid.Row="1" TextAlignment="Center" Foreground="#59FFFFFF" Padding="0,0,0,20" Text="{x:Bind TodaysDate, Mode=OneWay}"></TextBlock>
-            <Button Grid.Row="3" Width="40" Height="40" VerticalAlignment="Top" 
+             <Button Grid.Row="3" Width="40" Height="40" VerticalAlignment="Top" 
                     HorizontalAlignment="Right" Margin="20, -20" Canvas.ZIndex="1"
                     Click="UpdateOnclick">
                 <Button.Template>
@@ -142,8 +140,11 @@
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="Outside"  FontSize="52" Foreground="White" HorizontalAlignment="Center"/>
 
-                <Image Name="OutsideImage" Width="150" Height="150" HorizontalAlignment="Center" />
-                <TextBlock Name="OutsideTempTextBlock" Text ="80" FontSize="52" Foreground="White" HorizontalAlignment="Center"/>
+                <Image Name="OutsideImage" Width="150" Height="150" HorizontalAlignment="Center"
+                       Source="{x:Bind ViewModel.OutsideTempature.Image, Mode=OneWay}"/>
+                <TextBlock Name="OutsideTempTextBlock" FontSize="52"
+                           Foreground="White" HorizontalAlignment="Center"
+                           Text="{x:Bind ViewModel.OutsideTempature.TempString}"/>
                 <TextBlock Name="OutsideDescTextBlock" FontSize="16" Foreground="White" HorizontalAlignment="Center"/>
                 <TextBlock Name="OutsideLocationTextBlock" FontSize="12" Foreground="White" HorizontalAlignment="Center" TextWrapping="Wrap"/>
             </StackPanel>
