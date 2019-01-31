@@ -90,6 +90,11 @@
                 </controls:DataGrid.Columns>
             </controls:DataGrid>
             <Button Command="{Binding SaveSettingsCommand}">Save</Button>
+            <TextBlock
+                Style="{ThemeResource SubtitleTextBlockStyle}" Text="Weather" />
+            <TextBox Header="Dark Sky API Key" Text="{x:Bind ViewModel.Settings.DarkSkyApiKey, Mode=TwoWay}"></TextBox>
+            <TextBox Header="Latitude" Text="{x:Bind ViewModel.Settings.Latitude, Mode=TwoWay}"></TextBox>
+            <TextBox Header="Longitude" Text="{x:Bind ViewModel.Settings.Longitude, Mode=TwoWay}"></TextBox>
         </StackPanel>
     </Grid>
 </Page>

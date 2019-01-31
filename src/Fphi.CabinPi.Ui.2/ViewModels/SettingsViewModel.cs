@@ -19,14 +19,17 @@ namespace Fphi.CabinPi.Ui.ViewModels
         private readonly ThemeSelectorService _themeService;
         private readonly AppService _appService;
         private readonly DataService _dataService;
+        private readonly SettingsService _settings;
 
         public ObservableCollection<SensorConfiguration> SensorConfigurations => _dataService.SensorConfigurations;
+        public SettingsService Settings => _settings;
 
-        public SettingsViewModel(ThemeSelectorService themeService, AppService appService, DataService dataService)
+        public SettingsViewModel(ThemeSelectorService themeService, AppService appService, DataService dataService, SettingsService settings)
         {
             _themeService = themeService;
             _appService = appService;
             _dataService = dataService;
+            _settings = settings;
             _elementTheme = _themeService.Theme;
         }
 

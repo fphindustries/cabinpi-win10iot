@@ -13,18 +13,22 @@ namespace Fphi.CabinPi.Ui.ViewModels
         public Tempature InsideTempature { get; set; } 
         public Tempature OutsideTempature { get; set; }
 
-        private readonly AppService _appService;
+        public DarkSkyService.Forecast Forecast => _darkSkyService.CurrentForecast;
 
-        public MainViewModel(AppService appService)
+        private readonly AppService _appService;
+        private readonly DarkSkyService _darkSkyService;
+
+        public MainViewModel(AppService appService, DarkSkyService darkSkyService)
         {
             _appService = appService;
+            _darkSkyService = darkSkyService;
         }
 
         public async Task InitializeAsync()
         {
             InsideTempature = TempatureHelper.GetTempature(80, Tempature.Location.Inside);
             OutsideTempature = TempatureHelper.GetTempature(80, Tempature.Location.Outside);
-            await _appService.RequestConfigurationAsync();
+            await _darkSkyService.GetForecast();
         }
 
     }
