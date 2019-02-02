@@ -40,7 +40,8 @@ namespace Fphi.CabinPi.Ui.ViewModels
             //TODO: for design time editing, need to extract an interface
             serviceCollection.AddSingleton<DataService>();
             serviceCollection.AddSingleton<SettingsService>();
-            serviceCollection.AddSingleton<DarkSkyService>();
+            serviceCollection.AddSingleton<IWeatherService, DarkSkyService>();
+            serviceCollection.AddSingleton<ITempatureService, TempatureService>();
         }
 
         //The below properties are what each page actually bind to to get their VMs

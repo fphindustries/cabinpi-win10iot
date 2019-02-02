@@ -130,6 +130,7 @@
     <Compile Include="Helpers\Observable.cs" />
     <Compile Include="Helpers\PivotItemExtensions.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
+    <Compile Include="Models\NotifyTaskCompletion.cs" />
     <Compile Include="Models\SampleImage.cs" />
     <Compile Include="Models\SampleOrder.cs" />
     <Compile Include="Models\Tempature.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\SuspendAndResumeService.cs" />
     <Compile Include="Services\SuspensionState.cs" />
+    <Compile Include="Services\TempatureService.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="ViewModels\CameraViewModel.cs" />
     <Compile Include="ViewModels\ImageGalleryDetailViewModel.cs" />

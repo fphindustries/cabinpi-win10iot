@@ -7,17 +7,19 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Fphi.CabinPi.Ui2.Models
 {
+    public enum TempatureLocation
+    {
+        Inside,
+        Outside
+    }
+
     public class Tempature
     {
-        public enum Location
-        {
-            Inside,
-            Outside
-        }
+
         public int Temp { get; set; }
         public string Description{ get; set; }
         public BitmapImage Image { get; set; }
-        public Location  TempLocation { get; set; }
+        public TempatureLocation  TempLocation { get; set; }
         public string TempString => $"{Temp}°F";
 
     }
@@ -26,7 +28,7 @@ namespace Fphi.CabinPi.Ui2.Models
     {
         
         public static Images Images = new Images();
-        public static Tempature GetTempature(int temp, Tempature.Location location)
+        public static Tempature GetTempature(int temp, TempatureLocation location)
         {
             var t = new Tempature();
             t.Temp = temp;

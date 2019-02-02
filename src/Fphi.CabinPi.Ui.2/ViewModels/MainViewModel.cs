@@ -1,4 +1,5 @@
-﻿using Fphi.CabinPi.Ui.Services;
+﻿using Fphi.CabinPi.Ui.Models;
+using Fphi.CabinPi.Ui.Services;
 using Fphi.CabinPi.Ui2.Models;
 using System;
 using System.Collections.Generic;
@@ -10,26 +11,29 @@ namespace Fphi.CabinPi.Ui.ViewModels
 {
     public class MainViewModel : ViewModel
     {
-        public Tempature InsideTempature { get; set; } 
-        public Tempature OutsideTempature { get; set; }
+        public NotifyTaskCompletion<Tempature> InsideTempature { get; set; } 
+        public NotifyTaskCompletion<Tempature> OutsideTempature { get; set; }
 
-        public DarkSkyService.Forecast Forecast => _darkSkyService.CurrentForecast;
+       // public DarkSkyService.Forecast Forecast => _darkSkyService.CurrentForecast;
 
         private readonly AppService _appService;
-        private readonly DarkSkyService _darkSkyService;
+        private readonly IWeatherService _darkSkyService;
+        private readonly ITempatureService tempatureService;
 
-        public MainViewModel(AppService appService, DarkSkyService darkSkyService)
+        public MainViewModel(AppService appService, IWeatherService darkSkyService, ITempatureService tempatureService)
         {
             _appService = appService;
             _darkSkyService = darkSkyService;
+            InsideTempature = new NotifyTaskCompletion<Tempature>(tempatureService.GetTempature(TempatureLocation.Inside));
+            OutsideTempature = new NotifyTaskCompletion<Tempature>(tempatureService.GetTempature(TempatureLocation.Outside));
+
         }
 
         public async Task InitializeAsync()
         {
-            InsideTempature = TempatureHelper.GetTempature(80, Tempature.Location.Inside);
-            OutsideTempature = TempatureHelper.GetTempature(80, Tempature.Location.Outside);
-            await _darkSkyService.GetForecast();
+          //await _darkSkyService.GetForecast();
         }
-
+         
     }
 }
+

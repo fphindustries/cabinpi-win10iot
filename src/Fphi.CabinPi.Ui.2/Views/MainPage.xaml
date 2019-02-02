@@ -141,10 +141,10 @@
                 <TextBlock Text="Outside"  FontSize="52" Foreground="White" HorizontalAlignment="Center"/>
 
                 <Image Name="OutsideImage" Width="150" Height="150" HorizontalAlignment="Center"
-                       Source="{x:Bind ViewModel.OutsideTempature.Image, Mode=OneWay}"/>
+                       Source="{x:Bind ViewModel.OutsideTempature.Result.Image, Mode=OneWay}"/>
                 <TextBlock Name="OutsideTempTextBlock" FontSize="52"
                            Foreground="White" HorizontalAlignment="Center"
-                           Text="{x:Bind ViewModel.OutsideTempature.TempString}"/>
+                           Text="{x:Bind ViewModel.OutsideTempature.Result.TempString}"/>
                 <TextBlock Name="OutsideDescTextBlock" FontSize="16" Foreground="White" HorizontalAlignment="Center"/>
                 <TextBlock Name="OutsideLocationTextBlock" FontSize="12" Foreground="White" HorizontalAlignment="Center" TextWrapping="Wrap"/>
             </StackPanel>
