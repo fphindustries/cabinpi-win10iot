@@ -22,8 +22,9 @@ namespace Fphi.CabinPi.Ui.Services
 
         public async Task<Tempature> GetTempature(TempatureLocation location)
         {
+           // await Task.Delay(5000);
             //TODO: call the appropriate service (sensor or weather depending on location
-            return await Task.FromResult<Tempature>(TempatureHelper.GetTempature(70, location));
+            return await Task.FromResult<Tempature>(Tempature.GetTempature(70, location));
         }
     }
 }

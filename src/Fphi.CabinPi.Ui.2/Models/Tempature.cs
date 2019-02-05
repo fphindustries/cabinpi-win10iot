@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fphi.CabinPi.Ui.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,11 +23,6 @@ namespace Fphi.CabinPi.Ui2.Models
         public TempatureLocation  TempLocation { get; set; }
         public string TempString => $"{Temp}°F";
 
-    }
-
-    public static class TempatureHelper
-    {
-        
         public static Images Images = new Images();
         public static Tempature GetTempature(int temp, TempatureLocation location)
         {
@@ -57,11 +53,8 @@ namespace Fphi.CabinPi.Ui2.Models
 
             return new BitmapImage(new Uri(imagePath, UriKind.Absolute));
         }
+
     }
 
-    public class Images
-    {
-        public static string SunOutside = String.Format("ms-appx:///Assets/Weather/{0}.png", "01d");
-        public static string CatInside = String.Format("ms-appx:///Assets/Inside/{0}.png", "sleepingcat");
-    }
+
 }

@@ -5,9 +5,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lvc="using:LiveCharts.Uwp"
+    xmlns:Converters="using:Fphi.CabinPi.Ui.Converters"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Main}"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d" Loaded="Page_Loaded">
+    <Page.Resources>
+        <Converters:BooleanToVisibilityConverter x:Key="boolean" />
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -128,11 +132,17 @@
         <StackPanel  Background="#2196F3"  Grid.Column="0" Grid.Row="1">
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="Inside" FontSize="52" Foreground="White" HorizontalAlignment="Center"/>
+                <TextBlock Text="Loading..." Visibility="{x:Bind ViewModel.InsideTempature.IsNotCompleted,
+                    Converter={StaticResource boolean}}"/>
 
-                <Image Name="InsideImage" Width="150" Height="150" HorizontalAlignment="Center" />
-                <TextBlock Name="InsideTempTextBlock" FontSize="52" Foreground="White" HorizontalAlignment="Center"/>
-                <TextBlock Name="InsideDescTextBlock" FontSize="16" Foreground="White" HorizontalAlignment="Center"/>
-                <TextBlock Name="InsideLocationTextBlock" FontSize="12" Foreground="White" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                <Image Name="InsideImage" Width="150" Height="150" HorizontalAlignment="Center"
+                       Source="{x:Bind ViewModel.OutsideTempature.Result.Image, Mode=OneWay}"/>
+                <TextBlock Name="InsideTempTextBlock" FontSize="52" Foreground="White" HorizontalAlignment="Center"
+                           Text="{x:Bind ViewModel.OutsideTempature.Result.TempString}"/>
+                <TextBlock Name="InsideDescTextBlock" FontSize="16" Foreground="White" HorizontalAlignment="Center"
+                           Text="{x:Bind ViewModel.OutsideTempature.Result.Description}"/>
+                <TextBlock Name="InsideLocationTextBlock" FontSize="12" Foreground="White" HorizontalAlignment="Center"
+                           Text="{x:Bind ViewModel.OutsideTempature.Result.TempLocation}" TextWrapping="Wrap"/>
             </StackPanel>
         </StackPanel>
         <!--Outside #FF9800 #FFB74D #29B6F6-->
@@ -145,8 +155,10 @@
                 <TextBlock Name="OutsideTempTextBlock" FontSize="52"
                            Foreground="White" HorizontalAlignment="Center"
                            Text="{x:Bind ViewModel.OutsideTempature.Result.TempString}"/>
-                <TextBlock Name="OutsideDescTextBlock" FontSize="16" Foreground="White" HorizontalAlignment="Center"/>
-                <TextBlock Name="OutsideLocationTextBlock" FontSize="12" Foreground="White" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                <TextBlock Name="OutsideDescTextBlock" FontSize="16" Foreground="White" HorizontalAlignment="Center"
+                           Text="{x:Bind ViewModel.OutsideTempature.Result.Description}"/>
+                <TextBlock Name="OutsideLocationTextBlock" FontSize="12" Foreground="White" HorizontalAlignment="Center"
+                           Text="{x:Bind ViewModel.OutsideTempature.Result.TempLocation}" TextWrapping="Wrap"/>
             </StackPanel>
         </StackPanel>
     </Grid>
