@@ -1,9 +1,10 @@
-﻿using Fphi.CabinPi.Ui2.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Fphi.CabinPi.Ui2.Models;
 
 namespace Fphi.CabinPi.Ui.Services
 {
@@ -22,7 +23,7 @@ namespace Fphi.CabinPi.Ui.Services
 
         public async Task<Tempature> GetTempature(TempatureLocation location)
         {
-           // await Task.Delay(5000);
+            await Task.Delay(5000);
             //TODO: call the appropriate service (sensor or weather depending on location
             return await Task.FromResult<Tempature>(Tempature.GetTempature(70, location));
         }

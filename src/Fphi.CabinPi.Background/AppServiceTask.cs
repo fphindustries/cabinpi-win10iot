@@ -1,17 +1,21 @@
-﻿using Fphi.CabinPi.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Fphi.CabinPi.Common;
+
+using Microsoft.Extensions.DependencyInjection;
+
+using Newtonsoft.Json;
+
 using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
 using Windows.Foundation.Collections;
 using Windows.Storage;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace Fphi.CabinPi.Background
 {

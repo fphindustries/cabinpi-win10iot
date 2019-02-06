@@ -1,13 +1,15 @@
-﻿using Fphi.CabinPi.Common;
-using Fphi.CabinPi.Ui.Helpers;
-using Fphi.CabinPi.Ui.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+
+using Fphi.CabinPi.Common;
+using Fphi.CabinPi.Ui.Helpers;
+using Fphi.CabinPi.Ui.Services;
+
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 

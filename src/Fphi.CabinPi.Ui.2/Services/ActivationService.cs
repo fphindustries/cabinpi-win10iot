@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Fphi.CabinPi.Ui.Activation;
 using Fphi.CabinPi.Ui.Helpers;
 using Fphi.CabinPi.Ui.ViewModels;
+
 using Windows.ApplicationModel.Activation;
 using Windows.System;
 using Windows.UI.Core;

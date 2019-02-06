@@ -1,10 +1,11 @@
-﻿using Fphi.CabinPi.Common;
-using Fphi.CabinPi.Ui.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Fphi.CabinPi.Common;
+using Fphi.CabinPi.Ui.Helpers;
 
 namespace Fphi.CabinPi.Ui.Services
 {

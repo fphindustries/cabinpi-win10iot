@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using Fphi.CabinPi.Ui.Helpers;
 using Fphi.CabinPi.Ui.Services;
 using Fphi.CabinPi.Ui.ViewModels;
+
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

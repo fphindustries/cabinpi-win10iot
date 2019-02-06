@@ -1,9 +1,11 @@
-﻿using Fphi.CabinPi.Ui.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Fphi.CabinPi.Ui.Models;
+
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Fphi.CabinPi.Ui2.Models

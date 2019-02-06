@@ -1,7 +1,8 @@
-﻿using Fphi.CabinPi.Common;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+
+using Fphi.CabinPi.Common;
 
 namespace Fphi.CabinPi.Background
 {

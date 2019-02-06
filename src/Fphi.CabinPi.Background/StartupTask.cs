@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net.Http;
-using Windows.ApplicationModel.Background;
 using System.Diagnostics;
-using Windows.System.Threading;
-using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+
 using Fphi.CabinPi.Background.Fakes;
 using Fphi.CabinPi.Background.Sensors;
-using System.Threading.Tasks;
+
 using Microsoft.Extensions.DependencyInjection;
+
+using Windows.ApplicationModel.Background;
+using Windows.System.Threading;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
 

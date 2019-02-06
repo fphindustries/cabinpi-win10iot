@@ -1,10 +1,13 @@
-﻿using Fphi.CabinPi.Ui.Helpers;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Fphi.CabinPi.Ui.Helpers;
+
+using Newtonsoft.Json;
+
 using Windows.Web.Http;
 
 namespace Fphi.CabinPi.Ui.Services

@@ -1,11 +1,14 @@
-﻿using Fphi.CabinPi.Common;
-using Fphi.CabinPi.Ui.Helpers;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Fphi.CabinPi.Common;
+using Fphi.CabinPi.Ui.Helpers;
+
+using Newtonsoft.Json;
+
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;

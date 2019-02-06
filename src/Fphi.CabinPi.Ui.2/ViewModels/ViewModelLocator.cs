@@ -1,4 +1,5 @@
 ﻿using Fphi.CabinPi.Ui.Services;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Fphi.CabinPi.Ui.ViewModels

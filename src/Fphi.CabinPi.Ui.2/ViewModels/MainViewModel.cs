@@ -1,11 +1,12 @@
-﻿using Fphi.CabinPi.Ui.Models;
-using Fphi.CabinPi.Ui.Services;
-using Fphi.CabinPi.Ui2.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Fphi.CabinPi.Ui.Models;
+using Fphi.CabinPi.Ui.Services;
+using Fphi.CabinPi.Ui2.Models;
 
 namespace Fphi.CabinPi.Ui.ViewModels
 {

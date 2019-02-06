@@ -1,7 +1,4 @@
-﻿using LiveCharts;
-using LiveCharts.Defaults;
-using LiveCharts.Uwp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -9,6 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+
+using LiveCharts;
+using LiveCharts.Defaults;
+using LiveCharts.Uwp;
+
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation;
 using Windows.Foundation.Collections;

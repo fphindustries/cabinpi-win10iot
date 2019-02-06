@@ -1,11 +1,12 @@
-﻿using Fphi.CabinPi.Background.Fakes;
-using Fphi.CabinPi.Background.Sensors;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Fphi.CabinPi.Background.Fakes;
+using Fphi.CabinPi.Background.Sensors;
 
 namespace Fphi.CabinPi.Background
 {
