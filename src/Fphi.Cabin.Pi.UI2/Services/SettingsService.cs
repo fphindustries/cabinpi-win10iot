@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using Fphi.CabinPi.Common;
-using Fphi.CabinPi.Ui.Helpers;
-using Windows.Storage;
+using Fphi.Cabin.Pi.UI2.Core.Helpers;
+using Fphi.Cabin.Pi.UI2.Core.Services;
+using Fphi.Cabin.Pi.UI2.Helpers;
 
 namespace Fphi.CabinPi.Ui.Services
 {
-    public class SettingsService : Observable
+
+
+    public class SettingsService : Observable, ISettings
     {
         private bool _hasInstanceBeenInitialized = false;
 
@@ -19,7 +20,7 @@ namespace Fphi.CabinPi.Ui.Services
             if (!_hasInstanceBeenInitialized)
             {
                 DarkSkyApiKey =
-                    await ApplicationData.Current.LocalSettings.ReadAsync<string>(nameof(DarkSkyApiKey));
+                    await Windows.Storage.ApplicationData.Current.LocalSettings.ReadAsync<string>(nameof(DarkSkyApiKey));
 
                 Latitude =
                     await Windows.Storage.ApplicationData.Current.LocalSettings.ReadAsync<double>(nameof(Latitude));
@@ -32,6 +33,20 @@ namespace Fphi.CabinPi.Ui.Services
             }
         }
 
+        public string GetWeatherAPIString()
+        {
+            return DarkSkyApiKey;
+        }
+
+        public double GetLatitude()
+        {
+            return Latitude;
+        }
+
+        public double GetLongitude()
+        {
+            return Longitude;
+        }
 
         private string _darkSkyApiKey;
 
