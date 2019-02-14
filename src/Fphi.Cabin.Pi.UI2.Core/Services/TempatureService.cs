@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fphi.CabinPi.Ui.Services
+namespace Fphi.Cabin.Pi.UI2.Services
 {
     public interface ITempatureService
     {

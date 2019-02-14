@@ -9,7 +9,7 @@ using Fphi.Cabin.Pi.UI2.Core.Services;
 using Newtonsoft.Json;
 
 
-namespace Fphi.CabinPi.Ui.Services
+namespace Fphi.Cabin.Pi.UI2.Services
 {
     public interface IWeatherService
     {
