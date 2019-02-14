@@ -138,7 +138,7 @@
                     Converter={StaticResource boolean}}"/>
 
                 <Image Name="InsideImage" Width="150" Height="150" HorizontalAlignment="Center"
-                       Source="{x:Bind ViewModel.OutsideTempature.Result.Image, Mode=OneWay}"/>
+                       Source="{Binding ViewModel.OutsideTempature.Result.Image, Mode=OneWay}"/>
                 <TextBlock Name="InsideTempTextBlock" FontSize="52" Foreground="White" HorizontalAlignment="Center"
                            Text="{x:Bind ViewModel.OutsideTempature.Result.TempString}"/>
                 <TextBlock Name="InsideDescTextBlock" FontSize="16" Foreground="White" HorizontalAlignment="Center"
@@ -153,7 +153,7 @@
                 <TextBlock Text="Outside"  FontSize="52" Foreground="White" HorizontalAlignment="Center"/>
 
                 <Image Name="OutsideImage" Width="150" Height="150" HorizontalAlignment="Center"
-                       Source="{x:Bind ViewModel.OutsideTempature.Result.Image, Mode=OneWay}"/>
+                       Source="{Binding ViewModel.OutsideTempature.Result.Image, Mode=OneWay}"/>
                 <TextBlock Name="OutsideTempTextBlock" FontSize="52"
                            Foreground="White" HorizontalAlignment="Center"
                            Text="{x:Bind ViewModel.OutsideTempature.Result.TempString}"/>

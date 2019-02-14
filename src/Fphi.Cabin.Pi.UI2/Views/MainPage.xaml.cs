@@ -1,7 +1,7 @@
 ﻿using System;
 
 using Fphi.Cabin.Pi.UI2.ViewModels;
-
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Fphi.Cabin.Pi.UI2.Views
@@ -16,6 +16,11 @@ namespace Fphi.Cabin.Pi.UI2.Views
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        private void UpdateOnclick(object sender, RoutedEventArgs e)
+        {
+            //TimePowerChart.Update(true);
         }
     }
 }

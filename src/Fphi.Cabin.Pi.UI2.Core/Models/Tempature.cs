@@ -18,7 +18,7 @@ namespace Fphi.CabinPi.UI2.Core.Models
 
         public int Temp { get; set; }
         public string Description{ get; set; }
-        public string ImagePath { get; set; }
+        public string Image { get; set; }
         public TempatureLocation  TempLocation { get; set; }
         public string TempString => $"{Temp}°F";
 
@@ -27,7 +27,7 @@ namespace Fphi.CabinPi.UI2.Core.Models
             var t = new Tempature();
             t.Temp = temp;
             t.Description = GetDescriptionBasedOnTemp(temp);
-            t.ImagePath = GetImagePathBasedOnTemp(temp);
+            t.Image = GetImageBasedOnTemp(temp);
             t.TempLocation = location;
             return t;
         }
@@ -40,7 +40,7 @@ namespace Fphi.CabinPi.UI2.Core.Models
                 return "Ok campers, rise and shine! — and don't forget your booties 'cause it's cooooooold out there today.";
         }
 
-        public static string GetImagePathBasedOnTemp(int temp)
+        public static string GetImageBasedOnTemp(int temp)
         {
 
             string imagePath;
@@ -51,6 +51,7 @@ namespace Fphi.CabinPi.UI2.Core.Models
 
             return imagePath;
             //return new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+
         }
 
     }
