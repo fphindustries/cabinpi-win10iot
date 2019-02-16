@@ -68,13 +68,13 @@ namespace Fphi.CabinPi.Background
 
                 switch (messageKey)
                 {
-                    case AppServiceMessages.RequestConfiguration:
+                    case SensorServiceMessages.RequestConfiguration:
                         //Send current configuration
                         ValueSet message = new ValueSet();
-                        message.Add(AppServiceMessages.Configuration, JsonConvert.SerializeObject(configurationService.BackgroundConfiguration));
+                        message.Add(SensorServiceMessages.Configuration, JsonConvert.SerializeObject(configurationService.BackgroundConfiguration));
                         await BroadcastMessage(message);
                         break;
-                    case AppServiceMessages.Configuration:
+                    case SensorServiceMessages.Configuration:
                         var config = JsonConvert.DeserializeObject<BackgroundConfiguration>(args.Request.Message[messageKey].ToString());
                         await configurationService.SetConfiguration(config);
                         break;

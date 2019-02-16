@@ -120,7 +120,8 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AppServiceMessages.cs" />
+    <Compile Include="Models\SensorReading.cs" />
+    <Compile Include="SensorServiceMessages.cs" />
     <Compile Include="BackgroundConfiguration.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />

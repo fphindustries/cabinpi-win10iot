@@ -133,6 +133,7 @@
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="EventHandlers\CameraControlEventArgs.cs" />
     <Compile Include="Helpers\CameraOrientationExtensions.cs" />
+    <Compile Include="Helpers\DispatcherHelper.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\ImagesNavigationHelper.cs" />
     <Compile Include="Helpers\NavHelper.cs" />

@@ -1,4 +1,5 @@
 ﻿using Fphi.CabinPi.Common;
+using Fphi.CabinPi.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Fphi.Cabin.Pi.Common.Models
     public class SensorConfiguration
     {
         public SensorId SensorId { get; set; }
-        public SensorReading SensorReading { get; set; }
+        public SensorCapability SensorCapability { get; set; }
         public bool Enabled { get; set; }
 
         public string Name
@@ -29,21 +30,21 @@ namespace Fphi.Cabin.Pi.Common.Models
             }
         }
 
-        public string SensorReadingName
+        public string SensorCapabilityName
         {
             get
             {
-                switch (SensorReading)
+                switch (SensorCapability)
                 {
-                    case SensorReading.InteriorTemperaturAndHumidity:
+                    case SensorCapability.InteriorTemperatureAndHumidity:
                         return "Interior Temperature and Humidity";
-                    case SensorReading.ExteriorTemperature:
+                    case SensorCapability.ExteriorTemperature:
                         return "Exterior Temperature";
-                    case SensorReading.InteriorTemperatureAndPressure:
+                    case SensorCapability.InteriorTemperatureAndPressure:
                         return "Interior Temperature and Pressure";
-                    case SensorReading.PowerConsumption:
+                    case SensorCapability.PowerConsumption:
                         return "Power Consumption";
-                    case SensorReading.SolarPower:
+                    case SensorCapability.SolarPower:
                         return "Solar Power";
                     default:
                         return "Unknown Reading";

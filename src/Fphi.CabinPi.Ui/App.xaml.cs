@@ -1,6 +1,7 @@
 ﻿using System;
 
 using Fphi.CabinPi.Ui.Common.Helpers;
+using Fphi.CabinPi.Ui.Helpers;
 using Fphi.CabinPi.Ui.Services;
 
 using Windows.ApplicationModel;
@@ -31,6 +32,7 @@ namespace Fphi.CabinPi.Ui
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
+            DispatcherHelper.Initialize();
             if (!args.PrelaunchActivated)
             {
                 await ActivationService.ActivateAsync(args);

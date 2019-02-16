@@ -2,6 +2,7 @@
 using Fphi.Cabin.Pi.Common.Services;
 using Fphi.CabinPi.Common;
 using Fphi.CabinPi.Common.Helpers;
+using Fphi.CabinPi.Common.Models;
 using Fphi.CabinPi.Ui.Helpers;
 using Newtonsoft.Json;
 using System;
@@ -41,6 +42,23 @@ namespace Fphi.CabinPi.Ui.Services
             get { return _connected; }
             set { Set(ref _connected, value); }
         }
+
+        private SensorReading _interiorTemperatureF;
+
+        public SensorReading InteriorTemperatureF
+        {
+            get { return _interiorTemperatureF; }
+            set { Set(ref _interiorTemperatureF, value); }
+        }
+
+        private SensorReading _interiorHumidity;
+
+        public SensorReading InteriorHumidity
+        {
+            get { return _interiorHumidity; }
+            set { Set(ref _interiorHumidity, value); }
+        }
+
 
 
         public SensorService(DataService dataService)
@@ -94,12 +112,27 @@ namespace Fphi.CabinPi.Ui.Services
                 Debug.WriteLine($"UI Task RequestReceived: {messageKey}");
                 switch (messageKey)
                 {
-                    case AppServiceMessages.Configuration:
+                    case SensorServiceMessages.Configuration:
                         //Send current configuration
                         var configuration = JsonConvert.DeserializeObject<BackgroundConfiguration>(args.Request.Message[messageKey].ToString());
                         await ValidateConfigurationAsync(configuration);
                         break;
-
+                    case SensorServiceMessages.SensorReading:
+                        var sensorReading = JsonConvert.DeserializeObject<SensorReading>(args.Request.Message[messageKey].ToString());
+                        switch (sensorReading.SensorReadingType)
+                        {
+                            case SensorReadingType.InteriorTemperatureC:
+                                break;
+                            case SensorReadingType.InteriorTemperatureF:
+                                InteriorTemperatureF = sensorReading;
+                                break;
+                            case SensorReadingType.InteriorHumidity:
+                                InteriorHumidity = sensorReading;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -114,7 +147,7 @@ namespace Fphi.CabinPi.Ui.Services
                 config.Sensors = SensorConfigurations.ToList();
 
                 ValueSet message = new ValueSet();
-                message.Add(AppServiceMessages.Configuration, JsonConvert.SerializeObject(config));
+                message.Add(SensorServiceMessages.Configuration, JsonConvert.SerializeObject(config));
                 await _backgroundAppService.SendMessageAsync(message);
             }
         }
@@ -124,7 +157,7 @@ namespace Fphi.CabinPi.Ui.Services
             if (Connected)
             {
                 ValueSet message = new ValueSet();
-                message.Add(AppServiceMessages.RequestConfiguration, null);
+                message.Add(SensorServiceMessages.RequestConfiguration, null);
                 await _backgroundAppService.SendMessageAsync(message);
             }
         }
@@ -138,8 +171,8 @@ namespace Fphi.CabinPi.Ui.Services
         {
             List<SensorConfiguration> knownSensors = new List<SensorConfiguration>()
             {
-                new SensorConfiguration{ Enabled=false, SensorId= SensorId.Sht31d, SensorReading= SensorReading.InteriorTemperaturAndHumidity },
-                new SensorConfiguration{ Enabled=false, SensorId= SensorId.FakeSht31d, SensorReading= SensorReading.InteriorTemperaturAndHumidity }
+                new SensorConfiguration{ Enabled=false, SensorId= SensorId.Sht31d, SensorCapability= SensorCapability.InteriorTemperatureAndHumidity },
+                new SensorConfiguration{ Enabled=false, SensorId= SensorId.FakeSht31d, SensorCapability= SensorCapability.InteriorTemperatureAndHumidity }
             };
 
             foreach (var knownSensor in knownSensors)

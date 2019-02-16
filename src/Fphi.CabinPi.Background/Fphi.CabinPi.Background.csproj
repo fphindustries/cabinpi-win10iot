@@ -104,7 +104,6 @@
     <Compile Include="ISensorDataStore.cs" />
     <Compile Include="ISensorFactory.cs" />
     <Compile Include="SensorReader.cs" />
-    <Compile Include="SensorReading.cs" />
     <Compile Include="Sensors\SensorFactory.cs" />
     <Compile Include="Sensors\SHT31dSensor.cs" />
     <Compile Include="StartupTask.cs" />

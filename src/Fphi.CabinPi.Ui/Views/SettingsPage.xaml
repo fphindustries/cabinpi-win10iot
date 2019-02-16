@@ -84,7 +84,7 @@
                     Remove this column definitions and define columns for your data.
                     Consider adding header properties to Resources.resw-->
                     <controls:DataGridTextColumn Header="Sensor" Binding="{Binding Name}" />
-                    <controls:DataGridTextColumn Header="Readings" Binding="{Binding SensorReadingName}"  />
+                    <controls:DataGridTextColumn Header="Readings" Binding="{Binding SensorCapabilityName}"  />
                     <controls:DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Enabled}" />
                 </controls:DataGrid.Columns>
             </controls:DataGrid>

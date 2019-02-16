@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Fphi.CabinPi.Common;
+using Fphi.CabinPi.Common.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -15,7 +18,7 @@ namespace Fphi.CabinPi.Background
         {
             Debug.WriteLine(reading);
             var messages = new ValueSet();
-            messages.Add(reading.Name, reading.Value);
+            messages.Add(SensorServiceMessages.SensorReading, JsonConvert.SerializeObject(reading));
             await AppServiceTask.BroadcastMessage(messages);
         }
     }

@@ -12,7 +12,7 @@ namespace Fphi.Cabin.Pi.Common.Models
             FakeSht31d = 100
         }
 
-        public enum SensorReading
+        public enum SensorReadingTypes
         {
             InteriorTemperaturAndHumidity,
             ExteriorTemperature,

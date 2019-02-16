@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Fphi.Cabin.Pi.Common.Services;
+﻿using Fphi.Cabin.Pi.Common.Services;
 using Fphi.CabinPi.Common.Helpers;
 using Fphi.CabinPi.Common.Models;
 using Fphi.CabinPi.Ui.Helpers;
 using Fphi.CabinPi.Ui.Services;
+using System;
+using System.Threading.Tasks;
 using Windows.UI.Popups;
 
 namespace Fphi.CabinPi.Ui.ViewModels
@@ -30,23 +30,26 @@ namespace Fphi.CabinPi.Ui.ViewModels
 
         // public DarkSkyService.Forecast Forecast => _darkSkyService.CurrentForecast;
 
-        private readonly SensorService _appService;
+        private readonly SensorService _sensorService;
         private readonly IWeatherService _darkSkyService;
         private readonly ITemperatureService _temperatureService;
         private readonly ISettings _settings;
 
         public RelayCommand UpdateCommand { get; private set; }
 
-        public MainViewModel(SensorService appService, IWeatherService darkSkyService, ITemperatureService temperatureService, ISettings settings)
+        public MainViewModel(SensorService sensorService, IWeatherService darkSkyService, ITemperatureService temperatureService, ISettings settings)
         {
-            _appService = appService;
+            _sensorService = sensorService;
             _settings = settings;
             _darkSkyService = darkSkyService;
             _temperatureService = temperatureService;
 
+
+
             UpdateCommand = new RelayCommand(OnUpdateCommand);
 
         }
+
 
         private void OnUpdateCommand()
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fphi.CabinPi.Common.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -80,22 +81,22 @@ namespace Fphi.CabinPi.Background.Sensors
                 return new SensorReading[] {
                 new SensorReading
                 {
-                    Name="TemperatureC",
-                     Sensor=Name,
+                    SensorReadingType= Common.SensorReadingType.InteriorTemperatureC,
+                     Sensor= Common.SensorId.Sht31d,
                      Time=DateTime.UtcNow,
                      Value=temperatureC
                 },
                 new SensorReading
                 {
-                    Name="TemperatureF",
-                     Sensor=Name,
+                    SensorReadingType= Common.SensorReadingType.InteriorTemperatureF,
+                     Sensor= Common.SensorId.Sht31d,
                      Time=DateTime.UtcNow,
                      Value=temperatureF
                 },
                 new SensorReading
                 {
-                    Name="Humidity",
-                     Sensor=Name,
+                    SensorReadingType= Common.SensorReadingType.InteriorHumidity,
+                     Sensor= Common.SensorId.Sht31d,
                      Time=DateTime.UtcNow,
                      Value=humidity
                 }
