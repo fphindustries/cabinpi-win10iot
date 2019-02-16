@@ -16,13 +16,13 @@ namespace Fphi.CabinPi.Common.Models
     public class Temperature
     {
 
-        public int Temp { get; set; }
+        public double Temp { get; set; }
         public string Description{ get; set; }
         public string Image { get; set; }
         public TemperatureLocation TempLocation { get; set; }
         public string TempString => $"{Temp}°F";
 
-        public static Temperature GetTemperature(int temp, TemperatureLocation location)
+        public static Temperature GetTemperature(double temp, TemperatureLocation location)
         {
             var t = new Temperature();
             t.Temp = temp;
@@ -32,7 +32,7 @@ namespace Fphi.CabinPi.Common.Models
             return t;
         }
 
-        public static string GetDescriptionBasedOnTemp(int temp)
+        public static string GetDescriptionBasedOnTemp(double temp)
         {
             if (temp > 50)
                 return "Ah yeah...it's cozy in here";
@@ -40,7 +40,7 @@ namespace Fphi.CabinPi.Common.Models
                 return "Ok campers, rise and shine! — and don't forget your booties 'cause it's cooooooold out there today.";
         }
 
-        public static string GetImageBasedOnTemp(int temp)
+        public static string GetImageBasedOnTemp(double temp)
         {
 
             string imagePath;
@@ -50,7 +50,6 @@ namespace Fphi.CabinPi.Common.Models
                 imagePath = Images.SunOutside;
 
             return imagePath;
-            //return new BitmapImage(new Uri(imagePath, UriKind.Absolute));
 
         }
 

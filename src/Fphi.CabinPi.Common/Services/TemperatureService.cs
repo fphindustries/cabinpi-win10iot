@@ -15,16 +15,42 @@ namespace Fphi.Cabin.Pi.Common.Services
     public class TemperatureService : ITemperatureService
     {
         IWeatherService _weatherService;
-        public TemperatureService(IWeatherService weatherService)
+        ISettings _settings;
+        private double defaultTemp = 50;
+        public TemperatureService(IWeatherService weatherService, ISettings settings)
         {
             _weatherService = weatherService;
+            _settings = settings;
         }
 
         public async Task<Temperature> GetTemperature(TemperatureLocation location)
         {
-            await Task.Delay(5000);
-            //TODO: call the appropriate service (sensor or weather depending on location
-            return await Task.FromResult<Temperature>(Temperature.GetTemperature(70, location));
+            if (location == TemperatureLocation.Outside)
+            {
+                //bleh
+                var forecast = await _weatherService.GetForecast(_settings.Latitude, _settings.Longitude);
+                if (forecast != null)
+                {
+                    var temp = forecast.Currently.Temperature;
+                    if (temp.HasValue)
+                    {
+                        return await Task.FromResult<Temperature>(Temperature.GetTemperature(temp.Value, location));
+                    }
+                    else
+                    {
+                        return await Task.FromResult<Temperature>(Temperature.GetTemperature(defaultTemp, location));
+                    }
+                }
+                else
+                {
+                    return await Task.FromResult<Temperature>(Temperature.GetTemperature(defaultTemp, location));
+                }
+            }
+            else
+            {
+                return await Task.FromResult<Temperature>(Temperature.GetTemperature(74, location));
+
+            }
         }
     }
 }

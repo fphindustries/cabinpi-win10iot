@@ -133,9 +133,7 @@
         <StackPanel  Background="#2196F3"  Grid.Column="0" Grid.Row="1">
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="Inside" FontSize="52" Foreground="White" HorizontalAlignment="Center"/>
-                <!--<TextBlock Text="Loading..." Visibility="{x:Bind ViewModel.InsideTempature.IsNotCompleted,
-                    Converter={StaticResource boolean}}"/>-->
-
+     
                 <Image Name="InsideImage" Width="150" Height="150" HorizontalAlignment="Center"
                        Source="{x:Bind ViewModel.InsideTemperature.Image, Mode=OneWay}"/>
                 <TextBlock Name="InsideTempTextBlock" FontSize="52" Foreground="White" HorizontalAlignment="Center"

@@ -12,7 +12,7 @@ namespace Fphi.Cabin.Pi.Common.Services
 {
     public interface IWeatherService
     {
-        Task<Forecast> GetForecast();
+        Task<Forecast> GetForecast(double latitude, double longitude);
     }
 
 
@@ -27,10 +27,10 @@ namespace Fphi.Cabin.Pi.Common.Services
             _settings = settings;
         }
 
-        public async Task<Forecast> GetForecast()
+        public async Task<Forecast> GetForecast(double latitude, double longitude)
         {
             var httpClient = new HttpClient();
-            string url = $"{BaseUrl}{_settings.DarkSkyApiKey}/{_settings.Latitude},{_settings.Longitude}?exclude=minutely";
+            string url = $"{BaseUrl}{_settings.DarkSkyApiKey}/{latitude},{longitude}?exclude=minutely";
 
             var response = await httpClient.GetStringAsync(new Uri(url));
 
