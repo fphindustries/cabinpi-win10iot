@@ -24,6 +24,7 @@
         IsBackEnabled="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
         SelectedItem="{x:Bind ViewModel.Selected, Mode=OneWay}"
         IsSettingsVisible="True"
+        PaneDisplayMode="LeftCompact"
         Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
         <winui:NavigationView.MenuItems>
             <!--
@@ -32,14 +33,14 @@
             Or to use an IconElement instead of a Symbol see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/projectTypes/navigationpane.md
             Edit String/en-US/Resources.resw: Add a menu item title for each page
             -->
-            <winui:NavigationViewItem x:Uid="Shell_Main" Icon="Document" helpers:NavHelper.NavigateTo="views:MainPage" />
+            <winui:NavigationViewItem x:Uid="Shell_Main" Icon="Home" helpers:NavHelper.NavigateTo="views:MainPage" />
             <winui:NavigationViewItem x:Uid="Shell_WebView" Icon="Document" helpers:NavHelper.NavigateTo="views:WebViewPage" />
             <winui:NavigationViewItem x:Uid="Shell_MediaPlayer" Icon="Document" helpers:NavHelper.NavigateTo="views:MediaPlayerPage" />
             <winui:NavigationViewItem x:Uid="Shell_ContentGrid" Icon="Document" helpers:NavHelper.NavigateTo="views:ContentGridPage" />
             <winui:NavigationViewItem x:Uid="Shell_DataGrid" Icon="Document" helpers:NavHelper.NavigateTo="views:DataGridPage" />
-            <winui:NavigationViewItem x:Uid="Shell_Map" Icon="Document" helpers:NavHelper.NavigateTo="views:MapPage" />
-            <winui:NavigationViewItem x:Uid="Shell_Camera" Icon="Document" helpers:NavHelper.NavigateTo="views:CameraPage" />
-            <winui:NavigationViewItem x:Uid="Shell_ImageGallery" Icon="Document" helpers:NavHelper.NavigateTo="views:ImageGalleryPage" />
+            <winui:NavigationViewItem x:Uid="Shell_Map" Icon="MapPin" helpers:NavHelper.NavigateTo="views:MapPage" />
+            <winui:NavigationViewItem x:Uid="Shell_Camera" Icon="Camera" helpers:NavHelper.NavigateTo="views:CameraPage" />
+            <winui:NavigationViewItem x:Uid="Shell_ImageGallery" Icon="Slideshow" helpers:NavHelper.NavigateTo="views:ImageGalleryPage" />
         </winui:NavigationView.MenuItems>
         <i:Interaction.Behaviors>
             <behaviors:NavigationViewHeaderBehavior

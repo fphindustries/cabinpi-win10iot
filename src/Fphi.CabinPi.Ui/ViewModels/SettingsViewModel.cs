@@ -24,10 +24,10 @@ namespace Fphi.CabinPi.Ui.ViewModels
         public ObservableCollection<SensorConfiguration> SensorConfigurations => _sensorService.SensorConfigurations;
         public ISettings Settings => _settings;
 
-        public SettingsViewModel(ThemeSelectorService themeService, SensorService appService, ISettings settings)
+        public SettingsViewModel(ThemeSelectorService themeService, SensorService sensorService, ISettings settings)
         {
             _themeService = themeService;
-            _sensorService = appService;
+            _sensorService = sensorService;
             _settings = settings;
             _elementTheme = _themeService.Theme;
         }
@@ -90,7 +90,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
         public async Task InitializeAsync()
         {
             VersionDescription = GetVersionDescription();
-            //await _appService.RequestConfigurationAsync();
+            await _sensorService.RequestConfigurationAsync();
         }
 
         private string GetVersionDescription()

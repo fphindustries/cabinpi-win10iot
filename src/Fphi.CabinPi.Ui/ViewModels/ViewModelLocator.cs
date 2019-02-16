@@ -42,6 +42,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
             serviceCollection.AddSingleton<ImageGalleryViewModel>();
             serviceCollection.AddSingleton<MainViewModel>();
             serviceCollection.AddSingleton<SettingsViewModel>();
+            serviceCollection.AddSingleton<MapViewModel>();
 
             serviceCollection.AddSingleton<SensorService>();
             serviceCollection.AddSingleton<ThemeSelectorService>();
@@ -51,6 +52,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
             serviceCollection.AddSingleton<ISettings, SettingsService>();
             serviceCollection.AddSingleton<IWeatherService, DarkSkyService>();
             serviceCollection.AddSingleton<ITemperatureService, TemperatureService>();
+            serviceCollection.AddSingleton<LocationService>();
         }
 
         //The below properties are what each page actually bind to to get their VMs
@@ -59,6 +61,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
         public ImageGalleryViewModel ImageGallery => _serviceProvider.GetService<ImageGalleryViewModel>();
         public MainViewModel Main => _serviceProvider.GetService<MainViewModel>();
         public SettingsViewModel Settings => _serviceProvider.GetService<SettingsViewModel>();
+        public MapViewModel Map => _serviceProvider.GetService<MapViewModel>();
 
         //General Services
         public SensorService AppService => _serviceProvider.GetService<SensorService>();

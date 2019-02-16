@@ -9,7 +9,7 @@ namespace Fphi.CabinPi.Ui.Views
 {
     public sealed partial class MapPage : Page
     {
-        public MapViewModel ViewModel { get; } = new MapViewModel();
+        public MapViewModel ViewModel => ViewModelLocator.Current.Map;
 
         public MapPage()
         {

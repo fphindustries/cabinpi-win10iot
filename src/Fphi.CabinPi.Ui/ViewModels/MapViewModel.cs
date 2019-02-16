@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Fphi.Cabin.Pi.Common.Services;
 using Fphi.CabinPi.Common.Helpers;
 using Fphi.CabinPi.Ui.Helpers;
 using Fphi.CabinPi.Ui.Services;
@@ -17,6 +18,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
         private const double DefaultZoomLevel = 17;
 
         private readonly LocationService _locationService;
+        private readonly ISettings _settings;
 
         // TODO WTS: Set your preferred default location if a geolock can't be found.
         private readonly BasicGeoposition _defaultPosition = new BasicGeoposition()
@@ -41,15 +43,18 @@ namespace Fphi.CabinPi.Ui.ViewModels
             set { Set(ref _center, value); }
         }
 
-        public MapViewModel()
+        public MapViewModel(LocationService locationService, ISettings settings)
         {
-            _locationService = new LocationService();
-            Center = new Geopoint(_defaultPosition);
+            _locationService = locationService;
+            _settings = settings;
+            //Center = new Geopoint(_defaultPosition);
+            Center = new Geopoint(new BasicGeoposition() { Latitude = settings.Latitude, Longitude = settings.Longitude });
             ZoomLevel = DefaultZoomLevel;
         }
 
         public async Task InitializeAsync(MapControl map)
         {
+            /*
             if (_locationService != null)
             {
                 _locationService.PositionChanged += LocationService_PositionChanged;
@@ -70,13 +75,14 @@ namespace Fphi.CabinPi.Ui.ViewModels
                     Center = new Geopoint(_defaultPosition);
                 }
             }
-
+            */
             if (map != null)
             {
                 // TODO WTS: Set your map service token. If you don't have one, request from https://www.bingmapsportal.com/
                 // map.MapServiceToken = string.Empty;
                 AddMapIcon(map, Center, "Map_YourLocation".GetLocalized());
             }
+            
         }
 
         private void LocationService_PositionChanged(object sender, Geoposition geoposition)

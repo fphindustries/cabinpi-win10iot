@@ -5,6 +5,7 @@ using Fphi.CabinPi.Common.Helpers;
 using Fphi.CabinPi.Common.Models;
 using Fphi.CabinPi.Ui.Helpers;
 using Fphi.CabinPi.Ui.Services;
+using Windows.UI.Popups;
 
 namespace Fphi.CabinPi.Ui.ViewModels
 {
@@ -54,10 +55,18 @@ namespace Fphi.CabinPi.Ui.ViewModels
 
         public async Task InitializeAsync()
         {
-
+            try
+            {
                 //await _darkSkyService.GetForecast();
                 InsideTemperature = await _temperatureService.GetTemperature(TemperatureLocation.Inside);
                 OutsideTemperature = await _temperatureService.GetTemperature(TemperatureLocation.Outside);
+
+            }
+            catch (Exception ex)
+            {
+                var dialog = new MessageDialog(ex.Message);
+                await dialog.ShowAsync();
+            }
 
 
         }

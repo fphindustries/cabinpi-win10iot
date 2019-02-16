@@ -34,9 +34,19 @@ namespace Fphi.CabinPi.Ui.Services
             set { Set(ref _sensorConfigurations, value); }
         }
 
+        private bool _connected;
+
+        public bool Connected
+        {
+            get { return _connected; }
+            set { Set(ref _connected, value); }
+        }
+
+
         public SensorService(DataService dataService)
         {
             _dataService = dataService;
+            _connected = false;
         }
 
 
@@ -66,6 +76,7 @@ namespace Fphi.CabinPi.Ui.Services
             {
                 //add handler to receive app service messages (Perimiter messages)
                 _backgroundAppService.RequestReceived += BackgroundServiceRequestReceived;
+                Connected = true;
             }
         }
 
@@ -97,19 +108,25 @@ namespace Fphi.CabinPi.Ui.Services
 
         public async Task SendConfigurationAsync()
         {
-            var config = new BackgroundConfiguration();
-            config.Sensors = SensorConfigurations.ToList();
+            if (Connected)
+            {
+                var config = new BackgroundConfiguration();
+                config.Sensors = SensorConfigurations.ToList();
 
-            ValueSet message = new ValueSet();
-            message.Add(AppServiceMessages.Configuration, JsonConvert.SerializeObject(config));
-            await _backgroundAppService.SendMessageAsync(message);
+                ValueSet message = new ValueSet();
+                message.Add(AppServiceMessages.Configuration, JsonConvert.SerializeObject(config));
+                await _backgroundAppService.SendMessageAsync(message);
+            }
         }
 
         public async Task RequestConfigurationAsync()
         {
-            ValueSet message = new ValueSet();
-            message.Add(AppServiceMessages.RequestConfiguration, null);
-            await _backgroundAppService.SendMessageAsync(message);
+            if (Connected)
+            {
+                ValueSet message = new ValueSet();
+                message.Add(AppServiceMessages.RequestConfiguration, null);
+                await _backgroundAppService.SendMessageAsync(message);
+            }
         }
 
         /// <summary>
