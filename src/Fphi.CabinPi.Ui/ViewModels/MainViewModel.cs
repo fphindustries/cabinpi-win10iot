@@ -29,14 +29,14 @@ namespace Fphi.CabinPi.Ui.ViewModels
 
         // public DarkSkyService.Forecast Forecast => _darkSkyService.CurrentForecast;
 
-        private readonly AppService _appService;
+        private readonly SensorService _appService;
         private readonly IWeatherService _darkSkyService;
         private readonly ITemperatureService _temperatureService;
         private readonly ISettings _settings;
 
         public RelayCommand UpdateCommand { get; private set; }
 
-        public MainViewModel(AppService appService, IWeatherService darkSkyService, ITemperatureService temperatureService, ISettings settings)
+        public MainViewModel(SensorService appService, IWeatherService darkSkyService, ITemperatureService temperatureService, ISettings settings)
         {
             _appService = appService;
             _settings = settings;

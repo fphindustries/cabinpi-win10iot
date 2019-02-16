@@ -43,7 +43,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
             serviceCollection.AddSingleton<MainViewModel>();
             serviceCollection.AddSingleton<SettingsViewModel>();
 
-            serviceCollection.AddSingleton<AppService>();
+            serviceCollection.AddSingleton<SensorService>();
             serviceCollection.AddSingleton<ThemeSelectorService>();
 
             //TODO: for design time editing, need to extract an interface
@@ -61,7 +61,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
         public SettingsViewModel Settings => _serviceProvider.GetService<SettingsViewModel>();
 
         //General Services
-        public AppService AppService => _serviceProvider.GetService<AppService>();
+        public SensorService AppService => _serviceProvider.GetService<SensorService>();
         public ThemeSelectorService ThemeSelectorService => _serviceProvider.GetService<ThemeSelectorService>();
         public ISettings SettingsService => _serviceProvider.GetService<ISettings>();
         public IWeatherService WeatherService => _serviceProvider.GetService<IWeatherService>();

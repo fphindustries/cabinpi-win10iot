@@ -16,7 +16,12 @@ using Windows.UI.Core;
 
 namespace Fphi.CabinPi.Ui.Services
 {
-    public class AppService : Observable
+    public interface ISensorService
+    {
+        Task<double> GetReading(SensorReading sensor);
+    }
+
+    public class SensorService : Observable, ISensorService
     {
         private AppServiceConnection _backgroundAppService;
         private readonly DataService _dataService;
@@ -29,7 +34,7 @@ namespace Fphi.CabinPi.Ui.Services
             set { Set(ref _sensorConfigurations, value); }
         }
 
-        public AppService(DataService dataService)
+        public SensorService(DataService dataService)
         {
             _dataService = dataService;
         }
@@ -64,6 +69,11 @@ namespace Fphi.CabinPi.Ui.Services
             }
         }
 
+        public async Task<double> GetReading(SensorReading sensor)
+        {
+            //no idea how to actually make this work...
+            return  50;
+        }
 
         private async void BackgroundServiceRequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {

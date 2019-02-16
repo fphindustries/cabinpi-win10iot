@@ -17,17 +17,17 @@ namespace Fphi.CabinPi.Ui.ViewModels
     {
         private ElementTheme _elementTheme;
         private readonly ThemeSelectorService _themeService;
-        private readonly AppService _appService;
+        private readonly SensorService _sensorService;
         private readonly DataService _dataService;
         private readonly ISettings _settings;
 
-        public ObservableCollection<SensorConfiguration> SensorConfigurations => _appService.SensorConfigurations;
+        public ObservableCollection<SensorConfiguration> SensorConfigurations => _sensorService.SensorConfigurations;
         public ISettings Settings => _settings;
 
-        public SettingsViewModel(ThemeSelectorService themeService, AppService appService, ISettings settings)
+        public SettingsViewModel(ThemeSelectorService themeService, SensorService appService, ISettings settings)
         {
             _themeService = themeService;
-            _appService = appService;
+            _sensorService = appService;
             _settings = settings;
             _elementTheme = _themeService.Theme;
         }
@@ -84,7 +84,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
 
         private async void OnSaveSettings()
         {
-            await _appService.SendConfigurationAsync();
+            await _sensorService.SendConfigurationAsync();
         }
 
         public async Task InitializeAsync()
