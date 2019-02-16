@@ -88,7 +88,7 @@
                     <controls:DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Enabled}" />
                 </controls:DataGrid.Columns>
             </controls:DataGrid>
-            <Button Command="{Binding SaveSettingsCommand}">Save</Button>
+            <Button Command="{x:Bind ViewModel.SaveSettingsCommand}">Save</Button>
             <TextBlock
                 Style="{ThemeResource SubtitleTextBlockStyle}" Text="Weather" />
             <TextBox Header="Dark Sky API Key" Text="{x:Bind ViewModel.Settings.DarkSkyApiKey, Mode=TwoWay}"></TextBox>
