@@ -95,7 +95,7 @@ namespace Fphi.CabinPi.Background
                 {
                     var sensorName = bundle.First().Sensor.ToString();
                     var fields = bundle.ToDictionary(
-                        reading => reading.SensorReadingType.ToString(),
+                        reading => reading.Type.ToString(),
                         reading => reading.Value as object);
 
                     fields.Add("Name", sensorName);

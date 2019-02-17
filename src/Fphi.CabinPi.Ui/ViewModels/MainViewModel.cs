@@ -6,6 +6,7 @@ using Fphi.CabinPi.Ui.Services;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
+using Fphi.CabinPi.Common.Services;
 
 namespace Fphi.CabinPi.Ui.ViewModels
 {
@@ -30,14 +31,14 @@ namespace Fphi.CabinPi.Ui.ViewModels
 
         // public DarkSkyService.Forecast Forecast => _darkSkyService.CurrentForecast;
 
-        private readonly SensorService _sensorService;
+        private readonly ISensorService _sensorService;
         private readonly IWeatherService _darkSkyService;
         private readonly ITemperatureService _temperatureService;
         private readonly ISettings _settings;
 
         public RelayCommand UpdateCommand { get; private set; }
 
-        public MainViewModel(SensorService sensorService, IWeatherService darkSkyService, ITemperatureService temperatureService, ISettings settings)
+        public MainViewModel(ISensorService sensorService, IWeatherService darkSkyService, ITemperatureService temperatureService, ISettings settings)
         {
             _sensorService = sensorService;
             _settings = settings;
@@ -60,7 +61,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
         {
             try
             {
-                //await _darkSkyService.GetForecast();
+                //await _darkSkyService.GetForecast();GetTemperature
                 InsideTemperature = await _temperatureService.GetTemperature(TemperatureLocation.Inside);
                 OutsideTemperature = await _temperatureService.GetTemperature(TemperatureLocation.Outside);
 

@@ -13,14 +13,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
+using Fphi.CabinPi.Common.Services;
 
 namespace Fphi.CabinPi.Ui.Services
 {
-    public interface ISensorService
-    {
-        Task<double> GetReading(SensorReading sensor);
-    }
+
 
     public class SensorService : Observable, ISensorService
     {
@@ -43,7 +42,8 @@ namespace Fphi.CabinPi.Ui.Services
             set { Set(ref _connected, value); }
         }
 
-        private SensorReading _interiorTemperatureF;
+        private SensorReading _interiorTemperatureF = new SensorReading()
+            {Sensor = SensorId.FakeSht31d, Type = SensorType.InteriorTemperatureF, Value = 0};
 
         public SensorReading InteriorTemperatureF
         {
@@ -98,10 +98,16 @@ namespace Fphi.CabinPi.Ui.Services
             }
         }
 
-        public async Task<double> GetReading(SensorReading sensor)
+        public double GetReading(SensorType type)
         {
-            //no idea how to actually make this work...
-            return  50;
+            switch(type)
+            {
+                case SensorType.InteriorTemperatureF:
+                    return  InteriorTemperatureF.Value;
+                default:
+                    return 50;
+                    
+            }
         }
 
         private async void BackgroundServiceRequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
@@ -119,14 +125,14 @@ namespace Fphi.CabinPi.Ui.Services
                         break;
                     case SensorServiceMessages.SensorReading:
                         var sensorReading = JsonConvert.DeserializeObject<SensorReading>(args.Request.Message[messageKey].ToString());
-                        switch (sensorReading.SensorReadingType)
+                        switch (sensorReading.Type)
                         {
-                            case SensorReadingType.InteriorTemperatureC:
+                            case SensorType.InteriorTemperatureC:
                                 break;
-                            case SensorReadingType.InteriorTemperatureF:
+                            case SensorType.InteriorTemperatureF:
                                 InteriorTemperatureF = sensorReading;
                                 break;
-                            case SensorReadingType.InteriorHumidity:
+                            case SensorType.InteriorHumidity:
                                 InteriorHumidity = sensorReading;
                                 break;
                             default:

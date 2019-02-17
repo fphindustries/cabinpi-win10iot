@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Fphi.CabinPi.Common;
+using Fphi.CabinPi.Common.Services;
 
 namespace Fphi.Cabin.Pi.Common.Services
 {
@@ -16,10 +18,13 @@ namespace Fphi.Cabin.Pi.Common.Services
     {
         IWeatherService _weatherService;
         ISettings _settings;
+        ISensorService _sensorService;
+
         private double defaultTemp = 50;
-        public TemperatureService(IWeatherService weatherService, ISettings settings)
+        public TemperatureService(IWeatherService weatherService, ISettings settings, ISensorService sensorService)
         {
             _weatherService = weatherService;
+            _sensorService = sensorService;
             _settings = settings;
         }
 
@@ -48,7 +53,9 @@ namespace Fphi.Cabin.Pi.Common.Services
             }
             else
             {
-                return await Task.FromResult<Temperature>(Temperature.GetTemperature(74, location));
+                //internal
+                var temp =  _sensorService.GetReading(SensorType.InteriorTemperatureF);
+                return await Task.FromResult<Temperature>(Temperature.GetTemperature(temp, location));
 
             }
         }

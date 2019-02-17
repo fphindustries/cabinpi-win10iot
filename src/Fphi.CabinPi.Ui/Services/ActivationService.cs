@@ -82,7 +82,7 @@ namespace Fphi.CabinPi.Ui.Services
         {
             await ViewModelLocator.Current.ThemeSelectorService.SetRequestedThemeAsync();
 
-            await ViewModelLocator.Current.AppService.SetupAppServiceAsync();
+            await ViewModelLocator.Current.SensorService.SetupAppServiceAsync();
         }
 
         private IEnumerable<ActivationHandler> GetActivationHandlers()

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fphi.Cabin.Pi.Common.Services;
+using Fphi.CabinPi.Common.Services;
 using Fphi.CabinPi.Ui.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -44,7 +45,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
             serviceCollection.AddSingleton<SettingsViewModel>();
             serviceCollection.AddSingleton<MapViewModel>();
 
-            serviceCollection.AddSingleton<SensorService>();
+            serviceCollection.AddSingleton<ISensorService, SensorService>();
             serviceCollection.AddSingleton<ThemeSelectorService>();
 
             //TODO: for design time editing, need to extract an interface
@@ -64,7 +65,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
         public MapViewModel Map => _serviceProvider.GetService<MapViewModel>();
 
         //General Services
-        public SensorService AppService => _serviceProvider.GetService<SensorService>();
+        public ISensorService SensorService => _serviceProvider.GetService<ISensorService>();
         public ThemeSelectorService ThemeSelectorService => _serviceProvider.GetService<ThemeSelectorService>();
         public ISettings SettingsService => _serviceProvider.GetService<ISettings>();
         public IWeatherService WeatherService => _serviceProvider.GetService<IWeatherService>();

@@ -139,6 +139,7 @@
     <Compile Include="Models\Temperature.cs" />
     <Compile Include="Services\DarkSkyService.cs" />
     <Compile Include="Services\DataService.cs" />
+    <Compile Include="Services\ISensorService.cs" />
     <Compile Include="Services\ISettings.cs" />
     <Compile Include="Services\SampleDataService.cs" />
     <Compile Include="Services\Sensors.cs" />

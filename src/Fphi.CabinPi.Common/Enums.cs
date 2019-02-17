@@ -12,7 +12,7 @@ namespace Fphi.CabinPi.Common
         FakeSht31d=100
     }
 
-    public enum SensorReadingType
+    public enum SensorType
     {
         InteriorTemperatureC,
         InteriorTemperatureF,

@@ -17,21 +17,21 @@ namespace Fphi.CabinPi.Background.Fakes
                 new SensorReading
                 {
                     Sensor= Common.SensorId.FakeSht31d,
-                    SensorReadingType= Common.SensorReadingType.InteriorTemperatureF,
+                    Type= Common.SensorType.InteriorTemperatureF,
                     Value=rng.NextDouble() * 20D + 50D,
                     Time = DateTimeOffset.UtcNow
                 },
                 new SensorReading
                 {
                     Sensor= Common.SensorId.FakeSht31d,
-                    SensorReadingType= Common.SensorReadingType.InteriorTemperatureC,
+                    Type= Common.SensorType.InteriorTemperatureC,
                     Value=rng.NextDouble() * 20D + 50D,
                     Time = DateTimeOffset.UtcNow
                 },
                 new SensorReading
                 {
                     Sensor= Common.SensorId.FakeSht31d,
-                    SensorReadingType= Common.SensorReadingType.InteriorHumidity,
+                    Type= Common.SensorType.InteriorHumidity,
                     Value=rng.NextDouble() * 20D + 50D,
                     Time = DateTimeOffset.UtcNow
                 }

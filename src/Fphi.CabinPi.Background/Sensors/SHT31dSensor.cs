@@ -81,21 +81,21 @@ namespace Fphi.CabinPi.Background.Sensors
                 return new SensorReading[] {
                 new SensorReading
                 {
-                    SensorReadingType= Common.SensorReadingType.InteriorTemperatureC,
+                    Type= Common.SensorType.InteriorTemperatureC,
                      Sensor= Common.SensorId.Sht31d,
                      Time=DateTime.UtcNow,
                      Value=temperatureC
                 },
                 new SensorReading
                 {
-                    SensorReadingType= Common.SensorReadingType.InteriorTemperatureF,
+                    Type= Common.SensorType.InteriorTemperatureF,
                      Sensor= Common.SensorId.Sht31d,
                      Time=DateTime.UtcNow,
                      Value=temperatureF
                 },
                 new SensorReading
                 {
-                    SensorReadingType= Common.SensorReadingType.InteriorHumidity,
+                    Type= Common.SensorType.InteriorHumidity,
                      Sensor= Common.SensorId.Sht31d,
                      Time=DateTime.UtcNow,
                      Value=humidity
