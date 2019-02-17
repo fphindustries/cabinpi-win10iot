@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 using Fphi.CabinPi.Background.Fakes;
 using Fphi.CabinPi.Background.Sensors;
-
+using InfluxDB.Collector;
 using Microsoft.Extensions.DependencyInjection;
 
 using Windows.ApplicationModel.Background;
@@ -57,11 +57,13 @@ namespace Fphi.CabinPi.Background
 
             _sensorReader = _serviceProvider.GetService<SensorReader>();
 
+            Metrics.Collector = new CollectorConfiguration()
+                .Tag.With("host", Environment.GetEnvironmentVariable("COMPUTERNAME"))
+                .Batch.AtInterval(TimeSpan.FromSeconds(2))
+                .WriteTo.InfluxDB("http://cabinpi.fphi.us:8086", "data")
+                .CreateCollector();
 
-            _periodicTimer = ThreadPoolTimer.CreatePeriodicTimer(async(timer) =>
-            {
-                await OnTimer(timer);
-            }, TimeSpan.FromSeconds(5));
+            _periodicTimer = ThreadPoolTimer.CreatePeriodicTimer(OnTimer, TimeSpan.FromSeconds(5));
         }
 
         private void ConfigureServices(IServiceCollection serviceCollection)
@@ -75,7 +77,7 @@ namespace Fphi.CabinPi.Background
             serviceCollection.AddSingleton<SensorReader>();
         }
 
-        private async Task OnTimer(ThreadPoolTimer timer)
+        private void OnTimer(ThreadPoolTimer timer)
         {
             if (_cancelRequested)
             {
@@ -83,10 +85,22 @@ namespace Fphi.CabinPi.Background
             }
             else
             {
-                
+
                 Debug.WriteLine("OnTimer");
                 //Here we read all of the configured sensors, add them to the in-memory store, notify the UI that we have new data, and write it out to the remote influxdb
-                await _sensorReader.ReadSensors();
+                _sensorReader.ReadSensors().Wait();
+
+                var bundles = _sensorReader.GetAllReadings();
+                foreach (var bundle in bundles.Where(b => b.Any()))
+                {
+                    var sensorName = bundle.First().Sensor.ToString();
+                    var fields = bundle.ToDictionary(
+                        reading => reading.SensorReadingType.ToString(),
+                        reading => reading.Value as object);
+
+                    fields.Add("Name", sensorName);
+                    Metrics.Write("sensors", fields);
+                }
             }
         }
 

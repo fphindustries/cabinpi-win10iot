@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using Fphi.CabinPi.Background.Fakes;
 using Fphi.CabinPi.Background.Sensors;
+using Fphi.CabinPi.Common.Models;
 
 namespace Fphi.CabinPi.Background
 {
@@ -67,6 +68,14 @@ namespace Fphi.CabinPi.Background
                 {
                     _dataStore.WriteSensorReading(reading);
                 }
+            }
+        }
+
+        public IEnumerable<IEnumerable<SensorReading>> GetAllReadings()
+        {
+            foreach (var sensor in _sensors)
+            {
+                yield return sensor.GetReadings().Result;
             }
         }
     }
