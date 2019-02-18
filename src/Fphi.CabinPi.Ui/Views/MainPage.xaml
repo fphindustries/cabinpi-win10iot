@@ -137,7 +137,7 @@
                 <Image Name="InsideImage" Width="150" Height="150" HorizontalAlignment="Center"
                        Source="{x:Bind ViewModel.InsideTemperature.Image, Mode=OneWay}"/>
                 <TextBlock Name="InsideTempTextBlock" FontSize="52" Foreground="White" HorizontalAlignment="Center"
-                           Text="{x:Bind ViewModel.InsideTemperature.TempString, Mode=OneWay}"/>
+                           Text="{x:Bind ViewModel.InsideTemperature, Mode=OneWay}"/>
                 <TextBlock Name="InsideDescTextBlock" FontSize="16" Foreground="White" HorizontalAlignment="Center"
                            Text="{x:Bind ViewModel.InsideTemperature.Description, Mode=OneWay}"/>
                 <TextBlock Name="InsideLocationTextBlock" FontSize="12" Foreground="White" HorizontalAlignment="Center"
@@ -153,7 +153,7 @@
                        Source="{x:Bind ViewModel.OutsideTemperature.Image, Mode=OneWay}"/>
                 <TextBlock Name="OutsideTempTextBlock" FontSize="52"
                            Foreground="White" HorizontalAlignment="Center"
-                           Text="{x:Bind ViewModel.OutsideTemperature.TempString, Mode=OneWay}"/>
+                           Text="{x:Bind ViewModel.OutsideTemperature, Mode=OneWay}"/>
                 <TextBlock Name="OutsideDescTextBlock" FontSize="16" Foreground="White" HorizontalAlignment="Center"
                            Text="{x:Bind ViewModel.OutsideTemperature.Description, Mode=OneWay}"/>
                 <TextBlock Name="OutsideLocationTextBlock" FontSize="12" Foreground="White" HorizontalAlignment="Center"

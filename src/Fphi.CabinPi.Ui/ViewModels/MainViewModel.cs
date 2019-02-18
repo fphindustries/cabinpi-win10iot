@@ -33,17 +33,17 @@ namespace Fphi.CabinPi.Ui.ViewModels
 
         private readonly ISensorService _sensorService;
         private readonly IWeatherService _darkSkyService;
-        private readonly ITemperatureService _temperatureService;
+        private readonly ITemperatureDescriber _temperatureDescriber;
         private readonly ISettings _settings;
 
         public RelayCommand UpdateCommand { get; private set; }
 
-        public MainViewModel(ISensorService sensorService, IWeatherService darkSkyService, ITemperatureService temperatureService, ISettings settings)
+        public MainViewModel(ISensorService sensorService, IWeatherService darkSkyService, ITemperatureDescriber temperatureDescriber, ISettings settings)
         {
             _sensorService = sensorService;
             _settings = settings;
             _darkSkyService = darkSkyService;
-            _temperatureService = temperatureService;
+            _temperatureDescriber = temperatureDescriber;
 
 
 
@@ -62,8 +62,8 @@ namespace Fphi.CabinPi.Ui.ViewModels
             try
             {
                 //await _darkSkyService.GetForecast();GetTemperature
-                InsideTemperature = await _temperatureService.GetTemperature(TemperatureLocation.Inside);
-                OutsideTemperature = await _temperatureService.GetTemperature(TemperatureLocation.Outside);
+                InsideTemperature = await _temperatureDescriber.GetTemperature(TemperatureLocation.Inside);
+                OutsideTemperature = await _temperatureDescriber.GetTemperature(TemperatureLocation.Outside);
 
             }
             catch (Exception ex)

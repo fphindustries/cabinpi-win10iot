@@ -20,7 +20,10 @@ namespace Fphi.CabinPi.Common.Models
         public string Description{ get; set; }
         public string Image { get; set; }
         public TemperatureLocation TempLocation { get; set; }
-        public string TempString => $"{Temp}°F";
+        public override string ToString()
+        {
+            return $"{Temp}°F";
+        }
 
         public static Temperature GetTemperature(double temp, TemperatureLocation location)
         {

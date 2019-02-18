@@ -9,19 +9,19 @@ using Fphi.CabinPi.Common.Services;
 
 namespace Fphi.Cabin.Pi.Common.Services
 {
-    public interface ITemperatureService
+    public interface ITemperatureDescriber
     {
         Task<Temperature> GetTemperature(TemperatureLocation location);
     }
 
-    public class TemperatureService : ITemperatureService
+    public class TemperatureDescriber : ITemperatureDescriber
     {
         IWeatherService _weatherService;
         ISettings _settings;
         ISensorService _sensorService;
 
         private double defaultTemp = 50;
-        public TemperatureService(IWeatherService weatherService, ISettings settings, ISensorService sensorService)
+        public TemperatureDescriber(IWeatherService weatherService, ISettings settings, ISensorService sensorService)
         {
             _weatherService = weatherService;
             _sensorService = sensorService;

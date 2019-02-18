@@ -52,7 +52,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
             serviceCollection.AddSingleton<DataService>();
             serviceCollection.AddSingleton<ISettings, SettingsService>();
             serviceCollection.AddSingleton<IWeatherService, DarkSkyService>();
-            serviceCollection.AddSingleton<ITemperatureService, TemperatureService>();
+            serviceCollection.AddSingleton<ITemperatureDescriber, TemperatureDescriber>();
             serviceCollection.AddSingleton<LocationService>();
         }
 
@@ -69,7 +69,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
         public ThemeSelectorService ThemeSelectorService => _serviceProvider.GetService<ThemeSelectorService>();
         public ISettings SettingsService => _serviceProvider.GetService<ISettings>();
         public IWeatherService WeatherService => _serviceProvider.GetService<IWeatherService>();
-        public ITemperatureService TemperatureService => _serviceProvider.GetService<ITemperatureService>();
+        public ITemperatureDescriber TemperatureDescriber => _serviceProvider.GetService<ITemperatureDescriber>();
 
     }
 }

@@ -121,6 +121,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Models\SensorReading.cs" />
+    <Compile Include="Models\Weather.cs" />
     <Compile Include="SensorServiceMessages.cs" />
     <Compile Include="BackgroundConfiguration.cs" />
     <Compile Include="Enums.cs" />
@@ -141,9 +142,11 @@
     <Compile Include="Services\DataService.cs" />
     <Compile Include="Services\ISensorService.cs" />
     <Compile Include="Services\ISettings.cs" />
+    <Compile Include="Services\IWeatherService.cs" />
     <Compile Include="Services\SampleDataService.cs" />
     <Compile Include="Services\Sensors.cs" />
-    <Compile Include="Services\TemperatureService.cs" />
+    <Compile Include="Services\TemperatureDescriber.cs" />
+    <Compile Include="Services\WeatherDescriber.cs" />
     <Compile Include="SettingsStorageExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Fphi.CabinPi.Common.rd.xml" />

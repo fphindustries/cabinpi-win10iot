@@ -5,15 +5,13 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Fphi.CabinPi.Common.Helpers;
+using Fphi.CabinPi.Common.Services;
 using Newtonsoft.Json;
 
 
 namespace Fphi.Cabin.Pi.Common.Services
 {
-    public interface IWeatherService
-    {
-        Task<Forecast> GetForecast(double latitude, double longitude);
-    }
+
 
 
     public class DarkSkyService : Observable,IWeatherService
