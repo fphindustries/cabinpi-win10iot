@@ -53,6 +53,7 @@ namespace Fphi.CabinPi.Ui.Services
 
         private SensorReading _interiorHumidity;
 
+
         public SensorReading InteriorHumidity
         {
             get { return _interiorHumidity; }
@@ -65,6 +66,13 @@ namespace Fphi.CabinPi.Ui.Services
         {
             _dataService = dataService;
             _connected = false;
+        }
+
+        public event EventHandler<SensorReadingReceivedEventArgs> SensorReadingReceived;
+
+        protected virtual void OnSensorReadingReceived(SensorReadingReceivedEventArgs e)
+        {
+            SensorReadingReceived?.Invoke(this, e);
         }
 
 
@@ -138,6 +146,7 @@ namespace Fphi.CabinPi.Ui.Services
                             default:
                                 break;
                         }
+                        OnSensorReadingReceived(new SensorReadingReceivedEventArgs(sensorReading));
                         break;
                     default:
                         break;
