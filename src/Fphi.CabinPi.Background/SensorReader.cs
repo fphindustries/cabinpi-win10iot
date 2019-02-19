@@ -30,39 +30,52 @@ namespace Fphi.CabinPi.Background
             //_sensors = _sensorFactory.GetSensors();
 
             _configurationService.PropertyChanged += ConfigurationChanged;
-            BuildSensorsFromConfiguration();
         }
 
-        private void BuildSensorsFromConfiguration()
+        public async Task InitializeAsync()
+        {
+            await BuildSensorsFromConfiguration();
+        }
+
+        private async Task BuildSensorsFromConfiguration()
         {
             _sensors = new List<ISensor>();
             foreach(var sensorConfiguration in _configurationService.BackgroundConfiguration.Sensors.Where(s => s.Enabled))
             {
+                ISensor newSensor = null;
                 switch (sensorConfiguration.SensorId)
                 {
                     case Common.SensorId.Sht31d:
-                        _sensors.Add(new SHT31dSensor() { Name = sensorConfiguration.Name }) ;
+                        newSensor = new SHT31dSensor() { Name = sensorConfiguration.Name };
                         break;
                     case Common.SensorId.FakeSht31d:
-                        _sensors.Add(new FakeSHT31d() { Name = sensorConfiguration.Name });
+                        newSensor = new FakeSHT31d() { Name = sensorConfiguration.Name };
+                        break;
+                    case Common.SensorId.INA219:
+                        newSensor = new INA219Sensor(.1) { Name = sensorConfiguration.Name };
                         break;
                     default:
                         break;
                 }
+                if(newSensor != null)
+                {
+                    await newSensor.InitializeAsync();
+                    _sensors.Add(newSensor);
+                }
             }
         }
 
-        private void ConfigurationChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private async void ConfigurationChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             Debug.WriteLine("Configuration Changed");
-            BuildSensorsFromConfiguration();
+            await BuildSensorsFromConfiguration();
         }
 
         public async Task ReadSensors()
         {
             foreach(var sensor in _sensors)
             {
-                var readings = await sensor.GetReadings();
+                var readings = await sensor.GetReadingsAsync();
 
                 foreach(var reading in readings)
                 {
@@ -75,7 +88,7 @@ namespace Fphi.CabinPi.Background
         {
             foreach (var sensor in _sensors)
             {
-                yield return sensor.GetReadings().Result;
+                yield return sensor.GetReadingsAsync().Result;
             }
         }
     }

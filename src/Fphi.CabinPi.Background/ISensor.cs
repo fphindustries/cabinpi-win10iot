@@ -10,6 +10,8 @@ namespace Fphi.CabinPi.Background
     interface ISensor
     {
         string Name { get; set; }
-        Task<IEnumerable<SensorReading>> GetReadings();
+        Task<IEnumerable<SensorReading>> GetReadingsAsync();
+
+        Task InitializeAsync();
     }
 }

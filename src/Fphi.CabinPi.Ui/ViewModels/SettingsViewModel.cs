@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Fphi.Cabin.Pi.Common.Models;
 using Fphi.Cabin.Pi.Common.Services;
 using Fphi.CabinPi.Common.Helpers;
+using Fphi.CabinPi.Common.Services;
 using Fphi.CabinPi.Ui.Helpers;
 using Fphi.CabinPi.Ui.Services;
 
@@ -17,14 +18,14 @@ namespace Fphi.CabinPi.Ui.ViewModels
     {
         private ElementTheme _elementTheme;
         private readonly ThemeSelectorService _themeService;
-        private readonly SensorService _sensorService;
+        private readonly ISensorService _sensorService;
         private readonly DataService _dataService;
         private readonly ISettings _settings;
 
         public ObservableCollection<SensorConfiguration> SensorConfigurations => _sensorService.SensorConfigurations;
         public ISettings Settings => _settings;
 
-        public SettingsViewModel(ThemeSelectorService themeService, SensorService sensorService, ISettings settings)
+        public SettingsViewModel(ThemeSelectorService themeService, ISensorService sensorService, ISettings settings)
         {
             _themeService = themeService;
             _sensorService = sensorService;

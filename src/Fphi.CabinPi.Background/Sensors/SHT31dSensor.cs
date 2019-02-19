@@ -33,7 +33,7 @@ namespace Fphi.CabinPi.Background.Sensors
 
         public string Name { get; set; }
 
-        public async Task<IEnumerable<SensorReading>> GetReadings()
+        public async Task<IEnumerable<SensorReading>> GetReadingsAsync()
         {
             I2cDevice sht31d = null;
             try
@@ -139,6 +139,11 @@ namespace Fphi.CabinPi.Background.Sensors
             }
 
             return (byte)(crc & 0xFF);
+        }
+
+        public async Task InitializeAsync()
+        {
+            
         }
     }
 }

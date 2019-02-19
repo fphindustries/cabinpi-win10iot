@@ -9,14 +9,21 @@ namespace Fphi.CabinPi.Common
     public enum SensorId
     {
         Sht31d=1,
-        FakeSht31d=100
+        FakeSht31d=101,
+        INA219=2,
+        FakeINA219=102
     }
 
     public enum SensorType
     {
         InteriorTemperatureC,
         InteriorTemperatureF,
-        InteriorHumidity
+        InteriorHumidity,
+        BusVoltage,
+        Current,
+        Power,
+        ShuntVoltage,
+        SupplyVoltage
     }
 
     public enum SensorCapability

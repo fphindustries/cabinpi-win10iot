@@ -12,88 +12,90 @@
     <Page.Resources>
         <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ElementTheme" />
     </Page.Resources>
-    <Grid Margin="{StaticResource MediumLeftRightMargin}">
-        <StackPanel
+    <ScrollViewer>
+        <Grid Margin="{StaticResource MediumLeftRightMargin}">
+            <StackPanel
             x:Name="ContentArea">
-            <TextBlock
+                <TextBlock
                 x:Uid="Settings_Personalization"
                 Style="{ThemeResource SubtitleTextBlockStyle}" />
-            <StackPanel Margin="{StaticResource SmallTopBottomMargin}">
-                <TextBlock
+                <StackPanel Margin="{StaticResource SmallTopBottomMargin}">
+                    <TextBlock
                     x:Uid="Settings_Theme" />
 
-                <StackPanel Margin="{StaticResource XSmallTopMargin}">
-                    <RadioButton
+                    <StackPanel Margin="{StaticResource XSmallTopMargin}">
+                        <RadioButton
                         x:Uid="Settings_Theme_Light"
                         GroupName="AppTheme"
                         IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
                         Command="{x:Bind ViewModel.SwitchThemeCommand}"
                         FontSize="15">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Light</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
-                    <RadioButton
+                            <RadioButton.CommandParameter>
+                                <xaml:ElementTheme>Light</xaml:ElementTheme>
+                            </RadioButton.CommandParameter>
+                        </RadioButton>
+                        <RadioButton
                         x:Uid="Settings_Theme_Dark"
                         GroupName="AppTheme"
                         IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
                         Command="{x:Bind ViewModel.SwitchThemeCommand}"
                         FontSize="15">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Dark</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
-                    <RadioButton
+                            <RadioButton.CommandParameter>
+                                <xaml:ElementTheme>Dark</xaml:ElementTheme>
+                            </RadioButton.CommandParameter>
+                        </RadioButton>
+                        <RadioButton
                         x:Uid="Settings_Theme_Default"
                         GroupName="AppTheme"
                         IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
                         Command="{x:Bind ViewModel.SwitchThemeCommand}"
                         FontSize="15">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Default</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
+                            <RadioButton.CommandParameter>
+                                <xaml:ElementTheme>Default</xaml:ElementTheme>
+                            </RadioButton.CommandParameter>
+                        </RadioButton>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
 
-            <TextBlock
+                <TextBlock
                 x:Uid="Settings_About"
                 Style="{ThemeResource SubtitleTextBlockStyle}" />
 
-            <StackPanel Margin="{StaticResource XSmallTopMargin}">
-                <TextBlock
+                <StackPanel Margin="{StaticResource XSmallTopMargin}">
+                    <TextBlock
                     Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}"
                     Style="{ThemeResource BodyTextBlockStyle}" />
-                <TextBlock
+                    <TextBlock
                     x:Uid="Settings_AboutDescription"
                     Margin="{StaticResource XSmallTopMargin}"
                     Style="{ThemeResource BodyTextBlockStyle}" />
 
-                <HyperlinkButton
+                    <HyperlinkButton
                     x:Uid="Settings_PrivacyTermsLink"
                     Margin="{StaticResource XSmallTopMargin}" />
-            </StackPanel>
-            <TextBlock
+                </StackPanel>
+                <TextBlock
                 Style="{ThemeResource SubtitleTextBlockStyle}" Text="Sensors" />
-            <controls:DataGrid
+                <controls:DataGrid
                 ItemsSource="{x:Bind ViewModel.SensorConfigurations}"
                 AutoGenerateColumns="False"
                 GridLinesVisibility="Horizontal">
-                <controls:DataGrid.Columns>
-                    <!--TODO WTS:
+                    <controls:DataGrid.Columns>
+                        <!--TODO WTS:
                     Remove this column definitions and define columns for your data.
                     Consider adding header properties to Resources.resw-->
-                    <controls:DataGridTextColumn Header="Sensor" Binding="{Binding Name}" />
-                    <controls:DataGridTextColumn Header="Readings" Binding="{Binding SensorCapabilityName}"  />
-                    <controls:DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Enabled}" />
-                </controls:DataGrid.Columns>
-            </controls:DataGrid>
-            <Button Command="{x:Bind ViewModel.SaveSettingsCommand}">Save</Button>
-            <TextBlock
+                        <controls:DataGridTextColumn Header="Sensor" Binding="{Binding Name}" />
+                        <controls:DataGridTextColumn Header="Readings" Binding="{Binding SensorCapabilityName}"  />
+                        <controls:DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Enabled}" />
+                    </controls:DataGrid.Columns>
+                </controls:DataGrid>
+                <Button Command="{x:Bind ViewModel.SaveSettingsCommand}">Save</Button>
+                <TextBlock
                 Style="{ThemeResource SubtitleTextBlockStyle}" Text="Weather" />
-            <TextBox Header="Dark Sky API Key" Text="{x:Bind ViewModel.Settings.DarkSkyApiKey, Mode=TwoWay}"></TextBox>
-            <TextBox Header="Latitude" Text="{x:Bind ViewModel.Settings.Latitude, Mode=TwoWay}"></TextBox>
-            <TextBox Header="Longitude" Text="{x:Bind ViewModel.Settings.Longitude, Mode=TwoWay}"></TextBox>
-        </StackPanel>
-    </Grid>
+                <TextBox Header="Dark Sky API Key" Text="{x:Bind ViewModel.Settings.DarkSkyApiKey, Mode=TwoWay}"></TextBox>
+                <TextBox Header="Latitude" Text="{x:Bind ViewModel.Settings.Latitude, Mode=TwoWay}"></TextBox>
+                <TextBox Header="Longitude" Text="{x:Bind ViewModel.Settings.Longitude, Mode=TwoWay}"></TextBox>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </Page>

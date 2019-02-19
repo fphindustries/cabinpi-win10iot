@@ -56,6 +56,7 @@ namespace Fphi.CabinPi.Background
             Task.Run(configuration.InitAsync).Wait();
 
             _sensorReader = _serviceProvider.GetService<SensorReader>();
+            Task.Run(_sensorReader.InitializeAsync).Wait();
 
             Metrics.Collector = new CollectorConfiguration()
                 .Tag.With("host", Environment.GetEnvironmentVariable("COMPUTERNAME"))

@@ -10,7 +10,7 @@ namespace Fphi.CabinPi.Background.Fakes
     class FakeSHT31d : ISensor
     {
         public string Name { get; set; }
-        public async Task<IEnumerable<SensorReading>> GetReadings()
+        public async Task<IEnumerable<SensorReading>> GetReadingsAsync()
         {
             Random rng = new Random();
             return new SensorReading[] {
@@ -36,6 +36,10 @@ namespace Fphi.CabinPi.Background.Fakes
                     Time = DateTimeOffset.UtcNow
                 }
             };
+        }
+
+        public async Task InitializeAsync()
+        {
         }
     }
 }

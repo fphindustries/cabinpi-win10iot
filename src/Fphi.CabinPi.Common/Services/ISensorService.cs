@@ -1,6 +1,8 @@
-﻿using Fphi.CabinPi.Common.Models;
+﻿using Fphi.Cabin.Pi.Common.Models;
+using Fphi.CabinPi.Common.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +32,6 @@ namespace Fphi.CabinPi.Common.Services
         Task SetupAppServiceAsync();
         Task SendConfigurationAsync();
         Task RequestConfigurationAsync();
-
+        ObservableCollection<SensorConfiguration> SensorConfigurations { get; set; }
     }
 }
