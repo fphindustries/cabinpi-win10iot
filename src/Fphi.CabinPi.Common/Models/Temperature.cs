@@ -7,34 +7,27 @@ using System.Threading.Tasks;
 
 namespace Fphi.CabinPi.Common.Models
 {
-    public enum TemperatureLocation
-    {
-        Inside,
-        Outside
-    }
-
     public class Temperature
     {
 
         public double Temp { get; set; }
         public string Description{ get; set; }
         public string Image { get; set; }
-        public TemperatureLocation TempLocation { get; set; }
+        public string Location { get; set; }
         public override string ToString()
         {
             return $"{Temp}°F";
         }
 
-        public static Temperature GetTemperature(double temp, TemperatureLocation location)
+        public static Temperature GetTemperature(double temp)
         {
             var t = new Temperature
             {
-                Description = location == TemperatureLocation.Inside
-                    ? GetDescriptionBasedOnInsideTemp(temp)
-                    : GetDescriptionBasedOnOutsideTemp(temp),
+                Description = GetDescriptionBasedOnInsideTemp(temp),
                 Temp = temp,
                 Image = GetImageBasedOnTemp(temp),
-                TempLocation = location
+                Location = "Inside"
+
             };
             return t;
         }
@@ -45,38 +38,10 @@ namespace Fphi.CabinPi.Common.Models
             {
                 case double n when (n <= 0):
                     return
-                        "This isn't right....";
-                case double n when (n > 0 && n <= 20):
-                    return "This can't be good";
-                case double n when (n > 20 && n <= 32):
-                    return "This is probably not good";
-                case double n when (n > 32 && n <= 40):
-                    return "Danger...we're approaching freezing....";
-                case double n when (n > 40 && n <= 60):
-                    return "I think it's cold";
-                case double n when (n > 60 && n <= 70):
-                    return "It's OK....I guess.";
-                case double n when (n > 70 && n <= 80):
-                    return "It is cozy.";
-                case double n when (n >80 && n <= 99):
-                    return "Is it getting hot in here or is it just me?";
-                case double n when (n >= 100):
-                    return "This can't be right....";
-                default:
-                    return "Crap...I don't know sorry";
-            }
-        }
-
-        public static string GetDescriptionBasedOnOutsideTemp(double temp)
-        {
-            switch (temp)
-            {
-                case double n when (n <= 0):
-                    return
                         "The weather became so intensely cold that we sent for all the hunters who had remained out with captain Clarke's party, and they returned in the evening several of them frostbitten. Meriwether Lewis";
                 case double n when (n > 0 && n <= 20):
                     return "Ok campers, rise and shine! — and don't forget your booties 'cause it's cooooooold out there today.";
-                case double n when (n > 20 && n <=32):
+                case double n when (n > 20 && n <= 32):
                     return "The cold never bothered me anyway";
                 case double n when (n > 32 && n <= 40):
                     return " I just want to tell you both,good luck.We're all counting on you. ";
@@ -93,9 +58,8 @@ namespace Fphi.CabinPi.Common.Models
                 default:
                     return "Crap...I don't know sorry";
             }
-
         }
-
+        
         public static string GetImageBasedOnTemp(double temp)
         {
 

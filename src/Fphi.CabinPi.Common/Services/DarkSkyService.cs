@@ -57,7 +57,7 @@ namespace Fphi.Cabin.Pi.Common.Services
     /// instant in the case of <see cref="Forecast.Currently"/>, a minute for <see
     /// cref="Forecast.Minutely"/>, an hour for <see cref="Forecast.Hourly"/>, and a day for <see cref="Forecast.Daily"/>.
     /// </summary>
-    public class DataPoint
+    public class DarkSkyDataPoint
     {
         /// <summary>
         /// The apparent (or “feels like”) temperature in degrees Fahrenheit.
@@ -546,11 +546,11 @@ namespace Fphi.Cabin.Pi.Common.Services
     public class DataBlock
     {
         /// <summary>
-        /// An List of <see cref="DataPoint"/>, ordered by time, which together describe the weather
+        /// An List of <see cref="DarkSkyDataPoint"/>, ordered by time, which together describe the weather
         /// conditions at the requested location over time.
         /// </summary>
         [JsonProperty(PropertyName = "data")]
-        public List<DataPoint> Data { get; set; }
+        public List<DarkSkyDataPoint> Data { get; set; }
 
         /// <summary>
         /// A machine-readable text summary of this data block.
@@ -642,11 +642,11 @@ namespace Fphi.Cabin.Pi.Common.Services
         public List<Alert> Alerts { get; set; }
 
         /// <summary>
-        /// A <see cref="DataPoint"/> containing the current weather conditions at the requested location.
+        /// A <see cref="DarkSkyDataPoint"/> containing the current weather conditions at the requested location.
         /// </summary>
         /// <remarks>optional.</remarks>
         [JsonProperty(PropertyName = "currently")]
-        public DataPoint Currently { get; set; }
+        public DarkSkyDataPoint Currently { get; set; }
 
         /// <summary>
         /// A <see cref="DataBlock"/> containing the weather conditions day-by-day for the next week.

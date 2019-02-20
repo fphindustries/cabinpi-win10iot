@@ -141,7 +141,7 @@
                 <TextBlock Name="InsideDescTextBlock" FontSize="16" Foreground="White" HorizontalAlignment="Center"
                            Text="{x:Bind ViewModel.InsideTemperature.Description, Mode=OneWay}"/>
                 <TextBlock Name="InsideLocationTextBlock" FontSize="12" Foreground="White" HorizontalAlignment="Center"
-                           Text="{x:Bind ViewModel.InsideTemperature.TempLocation, Mode=OneWay}" TextWrapping="Wrap"/>
+                           Text="{x:Bind ViewModel.InsideTemperature.Location, Mode=OneWay}" TextWrapping="Wrap"/>
             </StackPanel>
         </StackPanel>
         <!--Outside #FF9800 #FFB74D #29B6F6-->
@@ -150,14 +150,14 @@
                 <TextBlock Text="Outside"  FontSize="52" Foreground="White" HorizontalAlignment="Center"/>
 
                 <Image Name="OutsideImage" Width="150" Height="150" HorizontalAlignment="Center"
-                       Source="{x:Bind ViewModel.OutsideTemperature.Image, Mode=OneWay}"/>
+                       Source="{x:Bind ViewModel.OutsideWeather.Image, Mode=OneWay}"/>
                 <TextBlock Name="OutsideTempTextBlock" FontSize="52"
                            Foreground="White" HorizontalAlignment="Center"
-                           Text="{x:Bind ViewModel.OutsideTemperature, Mode=OneWay}"/>
+                           Text="{x:Bind ViewModel.OutsideWeather, Mode=OneWay}"/>
                 <TextBlock Name="OutsideDescTextBlock" FontSize="16" Foreground="White" HorizontalAlignment="Center"
-                           Text="{x:Bind ViewModel.OutsideTemperature.Description, Mode=OneWay}"/>
+                           Text="{x:Bind ViewModel.OutsideWeather.Description, Mode=OneWay}"/>
                 <TextBlock Name="OutsideLocationTextBlock" FontSize="12" Foreground="White" HorizontalAlignment="Center"
-                           Text="{x:Bind ViewModel.OutsideTemperature.TempLocation, Mode=OneWay}" TextWrapping="Wrap"/>
+                           Text="{x:Bind ViewModel.OutsideWeather.Location, Mode=OneWay}" TextWrapping="Wrap"/>
             </StackPanel>
         </StackPanel>
     </Grid>
