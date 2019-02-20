@@ -64,7 +64,7 @@ namespace Fphi.CabinPi.Background
                 .WriteTo.InfluxDB("http://cabinpi.fphi.us:8086", "data")
                 .CreateCollector();
 
-            _periodicTimer = ThreadPoolTimer.CreatePeriodicTimer(OnTimer, TimeSpan.FromSeconds(5));
+            _periodicTimer = ThreadPoolTimer.CreatePeriodicTimer(OnTimer, TimeSpan.FromSeconds(10));
         }
 
         private void ConfigureServices(IServiceCollection serviceCollection)

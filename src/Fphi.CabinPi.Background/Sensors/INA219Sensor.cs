@@ -14,28 +14,36 @@ namespace Fphi.CabinPi.Background.Sensors
 
     class INA219Sensor : ISensor
     {
-        private class INA219Registers
-        {
-            public ushort Configuration { get; private set; }
-            public ushort ShuntVoltage { get; private set; }
-            public ushort BusVoltage { get; private set; }
-            public ushort Power { get; private set; }
-            public ushort Current { get; private set; }
-            public ushort Calibration { get; private set; }
+        //private class INA219Registers
+        //{
+        //    public ushort Configuration { get; private set; }
+        //    public ushort ShuntVoltage { get; private set; }
+        //    public ushort BusVoltage { get; private set; }
+        //    public ushort Power { get; private set; }
+        //    public ushort Current { get; private set; }
+        //    public ushort Calibration { get; private set; }
 
-            public INA219Registers(byte[] buffer)
-            {
-                Configuration = BitConverter.ToUInt16(buffer, 0);
-                ShuntVoltage = BitConverter.ToUInt16(buffer, 2);
-                BusVoltage = BitConverter.ToUInt16(buffer, 4);
-                Power = BitConverter.ToUInt16(buffer, 6);
-                Current = BitConverter.ToUInt16(buffer, 8);
-                Calibration = BitConverter.ToUInt16(buffer, 10);
-            }
-        }
+        //    public INA219Registers(byte[] buffer)
+        //    {
+        //        Configuration = (ushort)((buffer[0] << 8) + buffer[1]);// BitConverter.ToUInt16(buffer, 0);
+        //        ShuntVoltage = (ushort)((buffer[2] << 8) + buffer[3]);// BitConverter.ToUInt16(buffer, 2);
+        //        BusVoltage = (ushort)((buffer[4] << 8) + buffer[5]);// BitConverter.ToUInt16(buffer, 4);
+        //        Power = (ushort)((buffer[6] << 8) + buffer[7]);// BitConverter.ToUInt16(buffer, 6);
+        //        Current = (ushort)((buffer[8] << 8) + buffer[9]);// BitConverter.ToUInt16(buffer, 8);
+        //        Calibration = (ushort)((buffer[10] << 8) + buffer[11]);// BitConverter.ToUInt16(buffer, 10);
+        //    }
+        //}
 
         private const ushort ResetConfiguration = 32768; //bit 15
-
+        private enum Registers
+        {
+            Configuration = 0,
+            ShuntVoltage = 1,
+            BusVoltage = 2,
+            Power = 3,
+            Current = 4,
+            Calibration = 5
+        }
 
         public enum VoltageRange
         {
@@ -178,14 +186,14 @@ namespace Fphi.CabinPi.Background.Sensors
         /// </summary>
         private enum OperatingMode
         {
-            PowerDown=0,
-            ShuntVoltageTriggered=1,
-            BusVoltageTriggered=2,
-            ShuntAndBusTriggered=3,
-            ADCOff=4,
-            ShuntVoltageContinuous=5,
-            BusVoltageContinuous=6,
-            ShuntAndBusContinuous=7
+            PowerDown = 0,
+            ShuntVoltageTriggered = 1,
+            BusVoltageTriggered = 2,
+            ShuntAndBusTriggered = 3,
+            ADCOff = 4,
+            ShuntVoltageContinuous = 5,
+            BusVoltageContinuous = 6,
+            ShuntAndBusContinuous = 7
         }
 
         private enum ConfigurationRegisterBits
@@ -244,23 +252,46 @@ namespace Fphi.CabinPi.Background.Sensors
 
         private I2cDevice _device;
         private double _powerLsb;
-        private ushort _configuration;
-        private ushort _calibration;
 
 
         public string Name { get; set; }
 
         public async Task<IEnumerable<SensorReading>> GetReadingsAsync()
         {
-            var registers = ReadRegisters();
+            try
+            {
 
-            double busVoltage = registers.BusVoltage * BusMillivoltsLsb / 1000D;
-            double current = registers.Current + _currentLsb * 1000D;
-            double power = registers.Power * _powerLsb * 1000D;
-            double shuntVoltage = registers.ShuntVoltage * ShuntMillivoltsLsb;
-            double supplyVoltage = busVoltage + (shuntVoltage / 1000D);
+                string i2cDeviceSelector = I2cDevice.GetDeviceSelector();
+                IReadOnlyList<DeviceInformation> devices = await DeviceInformation.FindAllAsync(i2cDeviceSelector);
 
-            return new SensorReading[] {
+
+                var connectionSettings = new I2cConnectionSettings(_address); //Default address
+
+                // If this next line crashes with an ArgumentOutOfRangeException,
+                // then the problem is that no I2C devices were found.
+                //
+                // If the next line crashes with Access Denied, then the problem is
+                // that access to the I2C device (HTU21D) is denied.
+                //
+                // The call to FromIdAsync will also crash if the settings are invalid.
+                //
+                // FromIdAsync produces null if there is a sharing violation on the device.
+                // This will result in a NullReferenceException in Timer_Tick below.
+                _device = await I2cDevice.FromIdAsync(devices[0].Id, connectionSettings);
+
+                var configuration = ReadRegister(Registers.Configuration);
+                var calibration = ReadRegister(Registers.Calibration);
+
+                Configure();
+
+
+                double busVoltage = (ReadRegister(Registers.BusVoltage) >> 3) * BusMillivoltsLsb / 1000D;
+                double current = ReadRegister(Registers.Current) + _currentLsb * 1000D;
+                double power = ReadRegister(Registers.Power) * _powerLsb * 1000D;
+                double shuntVoltage = ReadRegister(Registers.ShuntVoltage) * ShuntMillivoltsLsb;
+                double supplyVoltage = busVoltage + (shuntVoltage / 1000D);
+
+                return new SensorReading[] {
                 new SensorReading
                 {
                     Type= Common.SensorType.BusVoltage,
@@ -297,6 +328,19 @@ namespace Fphi.CabinPi.Background.Sensors
                      Value=supplyVoltage
                 }
             };
+            }
+            catch (Exception ex)
+            {
+
+                Debug.WriteLine(ex.Message);
+                return null;
+            }
+            finally
+            {
+                _device.Dispose();
+                _device = null;
+            }
+
         }
 
 
@@ -316,29 +360,7 @@ namespace Fphi.CabinPi.Background.Sensors
 
         public async Task InitializeAsync()
         {
-            string i2cDeviceSelector = I2cDevice.GetDeviceSelector();
-            IReadOnlyList<DeviceInformation> devices = await DeviceInformation.FindAllAsync(i2cDeviceSelector);
 
-
-            var connectionSettings = new I2cConnectionSettings(_address); //Default address
-
-            // If this next line crashes with an ArgumentOutOfRangeException,
-            // then the problem is that no I2C devices were found.
-            //
-            // If the next line crashes with Access Denied, then the problem is
-            // that access to the I2C device (HTU21D) is denied.
-            //
-            // The call to FromIdAsync will also crash if the settings are invalid.
-            //
-            // FromIdAsync produces null if there is a sharing violation on the device.
-            // This will result in a NullReferenceException in Timer_Tick below.
-            _device = await I2cDevice.FromIdAsync(devices[0].Id, connectionSettings);
-
-            var registers = ReadRegisters();
-            _configuration = registers.Configuration;
-            _calibration = registers.Calibration;
-
-            Configure();
         }
 
         /// <summary>
@@ -375,7 +397,7 @@ namespace Fphi.CabinPi.Background.Sensors
                 else
                 {
                     _autoGainEnabled = true;
-                    gain = Gain.Gain40mV;
+                    _gain = Gain.Gain40mV;
                 }
             }
 
@@ -395,9 +417,9 @@ namespace Fphi.CabinPi.Background.Sensors
         public void Sleep()
         {
 
-            uint configuration = ReadRegisters().Configuration;
-            _configuration = (ushort)(configuration & 0xFFF8);
-            WriteRegisters();
+            ushort configuration = ReadRegister(Registers.Configuration);
+            configuration = (ushort)(configuration & 0xFFF8);
+            WriteRegister(Registers.Configuration, configuration);
         }
 
         /// <summary>
@@ -406,9 +428,9 @@ namespace Fphi.CabinPi.Background.Sensors
         /// <returns></returns>
         public void WakeAsync()
         {
-            var configuration = ReadRegisters().Configuration;
-            _configuration = (ushort)(configuration | 0x0007);
-            WriteRegisters();
+            ushort configuration = ReadRegister(Registers.Configuration);
+            configuration = (ushort)(configuration | 0x0007);
+            WriteRegister(Registers.Configuration, configuration);
 
             //40us delay to recover from powerdown (p14 of spec). We'll delay 1ms 
             //since that's all that's practical with the stock timer.
@@ -426,15 +448,14 @@ namespace Fphi.CabinPi.Background.Sensors
         /// </summary>
         public void Reset()
         {
-            _configuration = ResetConfiguration;
-            WriteRegisters();
+            WriteRegister(Registers.Configuration, ResetConfiguration);
         }
 
         private void HandleCurrentOverflow()
         {
-            if(_autoGainEnabled)
+            if (_autoGainEnabled)
             {
-                while(CurrentOverflowed)
+                while (CurrentOverflowed)
                 {
                     IncreaseGain();
                 }
@@ -449,7 +470,7 @@ namespace Fphi.CabinPi.Background.Sensors
         {
             var shuntV = maxExpectedAmps * _shuntOhms;
 
-            if(shuntV > _gainVolts[Gain.Gain320mV])
+            if (shuntV > _gainVolts[Gain.Gain320mV])
             {
                 throw new ArgumentOutOfRangeException($"Expected amps {maxExpectedAmps}, out of range, use a lower value shunt resistor");
             }
@@ -464,7 +485,7 @@ namespace Fphi.CabinPi.Background.Sensors
 
             Gain gain = ReadGain();
 
-            if(gain < Gain.Gain320mV)
+            if (gain < Gain.Gain320mV)
             {
                 gain = gain + 2048; //Increments the gain setting by one
                 Calibrate(_voltageRange, gain);
@@ -482,11 +503,11 @@ namespace Fphi.CabinPi.Background.Sensors
 
         private void SetConfigurationRegister(VoltageRange voltageRange, Gain gain, BusADCResolution busResolution, ShuntADCResolution shuntResolution, OperatingMode mode = OperatingMode.ShuntAndBusContinuous)
         {
-            _configuration = (ushort)((ushort)voltageRange + (ushort)gain + (ushort)busResolution + (ushort)shuntResolution + (ushort)mode);
-            WriteRegisters();
+            var configuration = (ushort)((ushort)voltageRange + (ushort)gain + (ushort)busResolution + (ushort)shuntResolution + (ushort)mode);
+            WriteRegister(Registers.Configuration, configuration);
         }
 
-        private void Calibrate(VoltageRange voltageRange, Gain gain, double maxExpectedAmps=0D)
+        private void Calibrate(VoltageRange voltageRange, Gain gain, double maxExpectedAmps = 0D)
         {
             double busVoltsMax = _busRange[voltageRange];
             double shuntVoltsMax = _gainVolts[gain];
@@ -512,23 +533,23 @@ namespace Fphi.CabinPi.Background.Sensors
             var calibration = (ushort)Math.Truncate(CalibrationFactor / (_currentLsb * _shuntOhms));
             Debug.WriteLine($"Calibration: {calibration}");
 
-            _calibration = calibration;
-            WriteRegisters();
+
+            WriteRegister(Registers.Calibration, calibration);
 
         }
 
         private double DetermineCurrentLsb(double maxExpectedAmps, double maxPossibleAmps)
         {
-            double currentLsb=0D;
+            double currentLsb = 0D;
 
-            if(maxExpectedAmps > 0)
+            if (maxExpectedAmps > 0)
             {
-                if(maxExpectedAmps > Math.Round(maxPossibleAmps,3))
+                if (maxExpectedAmps > Math.Round(maxPossibleAmps, 3))
                 {
                     throw new ArgumentException($"Expected current of {maxPossibleAmps}A is greater than max possible current of {maxPossibleAmps}A");
                 }
 
-                if(maxExpectedAmps < maxPossibleAmps)
+                if (maxExpectedAmps < maxPossibleAmps)
                 {
                     currentLsb = maxExpectedAmps / CurrentLsbFactor;
                 }
@@ -537,19 +558,17 @@ namespace Fphi.CabinPi.Background.Sensors
                     currentLsb = maxPossibleAmps / CurrentLsbFactor;
                 }
             }
+            else
+            {
+                currentLsb = maxPossibleAmps / CurrentLsbFactor;
+            }
 
-            if(currentLsb < _minDeviceCurrentLsb)
+            if (currentLsb < _minDeviceCurrentLsb)
             {
                 currentLsb = _minDeviceCurrentLsb;
             }
 
             return currentLsb;
-        }
-
-        private void WriteCalibrationRegister(ushort calibration)
-        {
-            _calibration = calibration;
-            WriteRegisters();
         }
 
 
@@ -560,7 +579,7 @@ namespace Fphi.CabinPi.Background.Sensors
 
         private Gain ReadGain()
         {
-            var configuration = ReadRegisters().Configuration;
+            var configuration = ReadRegister(Registers.Configuration);
             var gain = (Gain)(configuration & 0x1800); //Mask out other configuration
             Debug.WriteLine($"Gain is currently {gain}");
 
@@ -569,36 +588,43 @@ namespace Fphi.CabinPi.Background.Sensors
 
         private void SetGain(Gain gain)
         {
-            var configuration = ReadRegisters().Configuration;
+            var configuration = ReadRegister(Registers.Configuration);
             configuration = (ushort)(configuration & 0xE7FF); //wipe current gain setting
             configuration = (ushort)(configuration + gain);
-            _configuration = configuration;
             _gain = gain;
-            WriteRegisters();
+            WriteRegister(Registers.Configuration, configuration);
         }
 
 
-        private INA219Registers ReadRegisters()
+        private ushort WriteRegister(Registers register, ushort data)
         {
-            byte[] buffer = new byte[12];
-            _device.Read(buffer);
-            return new INA219Registers(buffer);
-        }
+            byte[] inputBuffer = new byte[3];
+            byte[] outputBuffer = new byte[2];
 
-        private INA219Registers WriteRegisters()
-        {
-            byte[] inputBuffer = new byte[12];
-            inputBuffer[0] = (byte)(_configuration >> 8);
-            inputBuffer[1] = (byte)_configuration;
-            inputBuffer[10] = (byte)(_calibration >> 8);
-            inputBuffer[11] = (byte)_calibration;
-
-            byte[] outputBuffer = new byte[12];
+            inputBuffer[0] = (byte)register;
+            inputBuffer[1] = (byte)(data >> 8);
+            inputBuffer[2] = (byte)data;
 
             _device.WriteRead(inputBuffer, outputBuffer);
-            return new INA219Registers(outputBuffer);
+
+            ushort result = (ushort)((outputBuffer[0] << 8) + outputBuffer[1]);
+
+            Debug.WriteLine($"Wrote {data:x} to {register}. Result: {result:x}");
+            return result;
+
         }
 
+        private ushort ReadRegister(Registers register)
+        {
+            byte[] inputBuffer = new byte[] { (byte)register };
+            byte[] outputBuffer = new byte[2];
 
+            _device.WriteRead(inputBuffer, outputBuffer);
+            ushort result = (ushort)((outputBuffer[0] << 8) + outputBuffer[1]);
+
+            Debug.WriteLine($"Read {result:x} from register {register}");
+            return result;
+
+        }
     }
 }
