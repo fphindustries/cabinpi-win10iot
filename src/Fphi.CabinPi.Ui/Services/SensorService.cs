@@ -188,7 +188,8 @@ namespace Fphi.CabinPi.Ui.Services
             {
                 new SensorConfiguration{ Enabled=false, SensorId= SensorId.Sht31d, SensorCapability= SensorCapability.InteriorTemperatureAndHumidity },
                 new SensorConfiguration{ Enabled=false, SensorId= SensorId.FakeSht31d, SensorCapability= SensorCapability.InteriorTemperatureAndHumidity },
-                new SensorConfiguration{ Enabled=false, SensorId= SensorId.INA219, SensorCapability= SensorCapability.PowerConsumption }
+                new SensorConfiguration{ Enabled=false, SensorId= SensorId.INA219, SensorCapability= SensorCapability.PowerConsumption },
+                new SensorConfiguration{ Enabled=false, SensorId= SensorId.FakeINA219, SensorCapability= SensorCapability.PowerConsumption }
             };
 
             foreach (var knownSensor in knownSensors)

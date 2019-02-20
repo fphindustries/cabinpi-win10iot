@@ -279,16 +279,17 @@ namespace Fphi.CabinPi.Background.Sensors
                 // This will result in a NullReferenceException in Timer_Tick below.
                 _device = await I2cDevice.FromIdAsync(devices[0].Id, connectionSettings);
 
+                Reset();
+
                 var configuration = ReadRegister(Registers.Configuration);
                 var calibration = ReadRegister(Registers.Calibration);
-
                 Configure();
 
 
-                double busVoltage = (ReadRegister(Registers.BusVoltage) >> 3) * BusMillivoltsLsb / 1000D;
-                double current = ReadRegister(Registers.Current) + _currentLsb * 1000D;
-                double power = ReadRegister(Registers.Power) * _powerLsb * 1000D;
                 double shuntVoltage = ReadRegister(Registers.ShuntVoltage) * ShuntMillivoltsLsb;
+                double busVoltage = (ReadRegister(Registers.BusVoltage) >> 3) * BusMillivoltsLsb / 1000D;
+                double power = ReadRegister(Registers.Power) * _powerLsb * 1000D;
+                double current = ReadRegister(Registers.Current) * _currentLsb * 1000D;
                 double supplyVoltage = busVoltage + (shuntVoltage / 1000D);
 
                 return new SensorReading[] {

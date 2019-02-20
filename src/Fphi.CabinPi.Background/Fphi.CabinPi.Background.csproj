@@ -98,6 +98,7 @@
     <Compile Include="AppServiceTask.cs" />
     <Compile Include="ConfigurationService.cs" />
     <Compile Include="Fakes\FakeSensorFactory.cs" />
+    <Compile Include="Fakes\FakeINA219.cs" />
     <Compile Include="Fakes\FakeSHT31d.cs" />
     <Compile Include="InMemoryDataStore.cs" />
     <Compile Include="ISensor.cs" />

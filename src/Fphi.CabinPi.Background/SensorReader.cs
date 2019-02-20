@@ -54,6 +54,9 @@ namespace Fphi.CabinPi.Background
                     case Common.SensorId.INA219:
                         newSensor = new INA219Sensor(.1) { Name = sensorConfiguration.Name };
                         break;
+                    case Common.SensorId.FakeINA219:
+                        newSensor = new FakeINA219() { Name = sensorConfiguration.Name };
+                        break;
                     default:
                         break;
                 }

@@ -24,6 +24,10 @@ namespace Fphi.Cabin.Pi.Common.Models
                         return "SHT31d";
                     case SensorId.FakeSht31d:
                         return "Fake SHT31d";
+                    case SensorId.INA219:
+                        return "INA219";
+                    case SensorId.FakeINA219:
+                        return "Fake INA219";
                     default:
                         return "Unknown Sensor";
                 }
