@@ -28,6 +28,8 @@ namespace Fphi.Cabin.Pi.Common.Models
                         return "INA219";
                     case SensorId.FakeINA219:
                         return "Fake INA219";
+                    case SensorId.BMP388:
+                        return "BMP388";
                     default:
                         return "Unknown Sensor";
                 }

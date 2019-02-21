@@ -107,6 +107,7 @@
     <Compile Include="SensorReader.cs" />
     <Compile Include="Sensors\INA219Sensor.cs" />
     <Compile Include="Sensors\SensorFactory.cs" />
+    <Compile Include="Sensors\BMP388Sensor.cs" />
     <Compile Include="Sensors\SHT31dSensor.cs" />
     <Compile Include="StartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

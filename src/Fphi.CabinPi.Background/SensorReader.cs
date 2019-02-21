@@ -57,6 +57,9 @@ namespace Fphi.CabinPi.Background
                     case Common.SensorId.FakeINA219:
                         newSensor = new FakeINA219() { Name = sensorConfiguration.Name };
                         break;
+                    case Common.SensorId.BMP388:
+                        newSensor = new BMP388Sensor() { Name = sensorConfiguration.Name };
+                        break;
                     default:
                         break;
                 }
@@ -66,6 +69,7 @@ namespace Fphi.CabinPi.Background
                     _sensors.Add(newSensor);
                 }
             }
+
         }
 
         private async void ConfigurationChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

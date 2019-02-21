@@ -14,25 +14,6 @@ namespace Fphi.CabinPi.Background.Sensors
 
     class INA219Sensor : ISensor
     {
-        //private class INA219Registers
-        //{
-        //    public ushort Configuration { get; private set; }
-        //    public ushort ShuntVoltage { get; private set; }
-        //    public ushort BusVoltage { get; private set; }
-        //    public ushort Power { get; private set; }
-        //    public ushort Current { get; private set; }
-        //    public ushort Calibration { get; private set; }
-
-        //    public INA219Registers(byte[] buffer)
-        //    {
-        //        Configuration = (ushort)((buffer[0] << 8) + buffer[1]);// BitConverter.ToUInt16(buffer, 0);
-        //        ShuntVoltage = (ushort)((buffer[2] << 8) + buffer[3]);// BitConverter.ToUInt16(buffer, 2);
-        //        BusVoltage = (ushort)((buffer[4] << 8) + buffer[5]);// BitConverter.ToUInt16(buffer, 4);
-        //        Power = (ushort)((buffer[6] << 8) + buffer[7]);// BitConverter.ToUInt16(buffer, 6);
-        //        Current = (ushort)((buffer[8] << 8) + buffer[9]);// BitConverter.ToUInt16(buffer, 8);
-        //        Calibration = (ushort)((buffer[10] << 8) + buffer[11]);// BitConverter.ToUInt16(buffer, 10);
-        //    }
-        //}
 
         private const ushort ResetConfiguration = 32768; //bit 15
         private enum Registers
