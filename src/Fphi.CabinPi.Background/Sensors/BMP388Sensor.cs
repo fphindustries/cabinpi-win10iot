@@ -58,7 +58,7 @@ namespace Fphi.CabinPi.Background.Sensors
                 IReadOnlyList<DeviceInformation> devices = await DeviceInformation.FindAllAsync(i2cDeviceSelector);
 
 
-                var connectionSettings = new I2cConnectionSettings(DefaultAddress); 
+                var connectionSettings = new I2cConnectionSettings(DefaultAddress);
 
                 // If this next line crashes with an ArgumentOutOfRangeException,
                 // then the problem is that no I2C devices were found.
@@ -77,52 +77,71 @@ namespace Fphi.CabinPi.Background.Sensors
 
 
                 WriteRegister(bmp388, Registers.Control, 0x13);
-                while((ReadByte(bmp388, Registers.Status) & 0x60) != 0x60)
+                while ((ReadByte(bmp388, Registers.Status) & 0x60) != 0x60)
                 {
                     await Task.Delay(2);
                 }
 
                 var data = ReadRegister(bmp388, Registers.PressureData, 6);
 
-                var adc_p = data[2] << 16 | data[1] << 8 | data[0];
-                var adc_t = data[5] << 16 | data[4] << 8 | data[3];
+                var uncomp_press = data[2] << 16 | data[1] << 8 | data[0];
+                var uncomp_temp = data[5] << 16 | data[4] << 8 | data[3];
 
-                var pd1 = adc_t - _coefficients.T1;
-                var pd2 = pd1 * _coefficients.T2;
+                var partial_data1 = uncomp_temp - _coefficients.T1;
+                var partial_data2 = partial_data1 * _coefficients.T2;
 
-                var temperature = pd2 + (pd1 * pd1) * _coefficients.T3;
+                var t_lin = partial_data2 + (partial_data1 * partial_data1) * _coefficients.T3;
 
-                pd1 = _coefficients.P6 * temperature;
-                pd2 = _coefficients.P7 * Math.Pow(temperature, 2);
-                var pd3 = _coefficients.P8 * Math.Pow(temperature, 3);
-                var po1 = _coefficients.P5 + pd1 + pd2 + pd3;
+                //partial_data1 = calib_data->par_p6 * calb_data->t_lin
+                partial_data1 = _coefficients.P6 * t_lin;
+                //partial_data2 = calib_data->par7 * (calib_data->t_lin * calib_data->t_lin);
+                partial_data2 = _coefficients.P7 * (t_lin * t_lin);
+                //partial_data3 = calib_data->par_p8 * (calib_data->t_lin * calib_data->t_lin * calib_data->t_lin);
+                var partial_data3 = _coefficients.P8 * (t_lin * t_lin * t_lin);
+                //partial_out1 = calib_data->par_p5 + partial_data1 + partial_data2 + partial_data3;
+                var partial_out1 = _coefficients.P5 + partial_data1 + partial_data2 + partial_data3;
 
-                pd1 = _coefficients.P2 * temperature;
-                pd2 = _coefficients.P3 * Math.Pow(temperature,2);
-                pd3 = _coefficients.P4 * Math.Pow(temperature,3);
-                var po2 = adc_p * (_coefficients.P1 + pd1 + pd2 + pd3);
+                //partial_data1 = calib_data->par_p2 * calib_data->t_lin;
+                partial_data1 = _coefficients.P2 * t_lin;
+                //partial_data2 = calib_data->par_p3 * (calib_data->t_lin * calib_data->t_lin);
+                partial_data2 = _coefficients.P3 * (t_lin * t_lin);
+                //partial_data3 = calib_data->par_p4 * (calib_data->t_lin * calib_data->t_lin * calib_data->t_lin);
+                partial_data3 = _coefficients.P4 * (t_lin * t_lin * t_lin);
+                //partial_out2 = (float)uncomp_press * (calib_data->par_p1 + partial_data1 + partial_data2 + partial_data3);
+                var partial_out2 = uncomp_press * (_coefficients.P1 + partial_data1 + partial_data2 + partial_data3);
 
-                pd1 = Math.Pow(adc_p,2);
-                pd2 = _coefficients.P9 + _coefficients.P10 * temperature;
-                pd3 = pd1 * pd2;
-                var pd4 = pd3 + _coefficients.P11 * Math.Pow(adc_p,3);
-
-                var pressure = po1 + po2 + pd4;
+                //partial_data1 = (float)uncomp_press * (float)uncomp_press
+                partial_data1 = uncomp_press * (double)uncomp_press;
+                //partial_data2 = calib_data->par_p9 + calib_data->par_p10 * calib_data->t_lin
+                partial_data2 = _coefficients.P9 + _coefficients.P10 * t_lin;
+                //partial_data3 = partial_data1 * partial_data2;
+                partial_data3 = partial_data1 * partial_data2;
+                //partial_data4 = partial_data3 + ((float)uncomp_press * (float)uncomp_press * (float)uncomp_press) * calib_data->par_p11;
+                var partial_data4 = partial_data3 + (uncomp_press * (double)uncomp_press * uncomp_press) * _coefficients.P11;
+                //comp_press = partial_out1 + partial_out2 + partial_data4;
+                var comp_press = partial_out1 + partial_out2 + partial_data4;
 
                 return new SensorReading[] {
                     new SensorReading
                     {
-                        Type= Common.SensorType.Pressure,
+                        Type= Common.SensorType.PressurePascals,
                          Sensor= Common.SensorId.BMP388,
                          Time=DateTime.UtcNow,
-                         Value=pressure
+                         Value=comp_press
+                    },
+                    new SensorReading
+                    {
+                        Type= Common.SensorType.PressureInHg,
+                         Sensor= Common.SensorId.BMP388,
+                         Time=DateTime.UtcNow,
+                         Value=comp_press *  0.00029530D
                     },
                     new SensorReading
                     {
                         Type= Common.SensorType.InteriorTemperatureC,
                          Sensor= Common.SensorId.BMP388,
                          Time=DateTime.UtcNow,
-                         Value=temperature
+                         Value=t_lin
                     }
 
                 };
@@ -148,8 +167,8 @@ namespace Fphi.CabinPi.Background.Sensors
             _coefficients.T1 = ((ushort)(calibrationData[0] + (calibrationData[1] << 8))) / Math.Pow(2, -8);
             _coefficients.T2 = ((ushort)(calibrationData[2] + (calibrationData[3] << 8))) / Math.Pow(2, 30);
             _coefficients.T3 = ((sbyte)calibrationData[4]) / Math.Pow(2, 48);
-            _coefficients.P1 = ((short)(calibrationData[5] + (calibrationData[6] << 8))) / Math.Pow(2, 20);
-            _coefficients.P2 = ((short)(calibrationData[7] + (calibrationData[8] << 8))) / Math.Pow(2, 29);
+            _coefficients.P1 = (((short)(calibrationData[5] + (calibrationData[6] << 8))) - Math.Pow(2, 14)) / Math.Pow(2, 20);
+            _coefficients.P2 = (((short)(calibrationData[7] + (calibrationData[8] << 8))) - Math.Pow(2, 14)) / Math.Pow(2, 29);
             _coefficients.P3 = ((sbyte)calibrationData[9]) / Math.Pow(2, 32);
             _coefficients.P4 = ((sbyte)calibrationData[10]) / Math.Pow(2, 37);
             _coefficients.P5 = ((ushort)(calibrationData[11] + (calibrationData[12] << 8))) / Math.Pow(2, -3);
@@ -157,8 +176,8 @@ namespace Fphi.CabinPi.Background.Sensors
             _coefficients.P7 = ((sbyte)calibrationData[15]) / Math.Pow(2, 8);
             _coefficients.P8 = ((sbyte)calibrationData[16]) / Math.Pow(2, 15);
             _coefficients.P9 = ((short)(calibrationData[17] + (calibrationData[18] << 8))) / Math.Pow(2, 48);
-            _coefficients.P10 =( (sbyte)calibrationData[19]) / Math.Pow(2, 48);
-            _coefficients.P11 =( (sbyte)calibrationData[20]) / Math.Pow(2, 65);
+            _coefficients.P10 = ((sbyte)calibrationData[19]) / Math.Pow(2, 48);
+            _coefficients.P11 = ((sbyte)calibrationData[20]) / Math.Pow(2, 65);
         }
 
         private void WriteRegister(I2cDevice device, Registers register, byte data)
@@ -196,7 +215,7 @@ namespace Fphi.CabinPi.Background.Sensors
 
         public async Task InitializeAsync()
         {
-            
+
         }
     }
 }
