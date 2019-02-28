@@ -9,7 +9,7 @@ using Windows.Devices.I2c;
 
 namespace Fphi.CabinPi.Background.Sensors
 {
-    class BMP388Sensor : ISensor
+    class BMP388Sensor : I2CSensor
     {
         private struct TrimmingCoefficients
         {
@@ -29,7 +29,11 @@ namespace Fphi.CabinPi.Background.Sensors
             public double P11;
         }
 
-        public string Name { get; set; }
+        public BMP388Sensor()
+        {
+            Address = DefaultAddress;
+        }
+        
 
         private const int DefaultAddress = 0x77;
         private TrimmingCoefficients _coefficients;
@@ -48,41 +52,18 @@ namespace Fphi.CabinPi.Background.Sensors
             Command = 0x7e
         }
 
-        public async Task<IEnumerable<SensorReading>> GetReadingsAsync()
+        protected override async Task<IEnumerable<SensorReading>> GetI2CReadingsAsync()
         {
-            I2cDevice bmp388 = null;
             try
             {
 
-                string i2cDeviceSelector = I2cDevice.GetDeviceSelector();
-                IReadOnlyList<DeviceInformation> devices = await DeviceInformation.FindAllAsync(i2cDeviceSelector);
-
-
-                var connectionSettings = new I2cConnectionSettings(DefaultAddress);
-
-                // If this next line crashes with an ArgumentOutOfRangeException,
-                // then the problem is that no I2C devices were found.
-                //
-                // If the next line crashes with Access Denied, then the problem is
-                // that access to the I2C device (HTU21D) is denied.
-                //
-                // The call to FromIdAsync will also crash if the settings are invalid.
-                //
-                // FromIdAsync produces null if there is a sharing violation on the device.
-                // This will result in a NullReferenceException in Timer_Tick below.
-                bmp388 = await I2cDevice.FromIdAsync(devices[0].Id, connectionSettings);
-
-                ReadCoefficients(bmp388);
-
-
-
-                WriteRegister(bmp388, Registers.Control, 0x13);
-                while ((ReadByte(bmp388, Registers.Status) & 0x60) != 0x60)
+                WriteRegister((byte)Registers.Control, 0x13);
+                while ((ReadByteRegister((byte)Registers.Status) & 0x60) != 0x60)
                 {
                     await Task.Delay(2);
                 }
 
-                var data = ReadRegister(bmp388, Registers.PressureData, 6);
+                var data = ReadRegisterBytes((byte)Registers.PressureData, 6);
 
                 var uncomp_press = data[2] << 16 | data[1] << 8 | data[0];
                 var uncomp_temp = data[5] << 16 | data[4] << 8 | data[3];
@@ -154,16 +135,20 @@ namespace Fphi.CabinPi.Background.Sensors
                 Debug.WriteLine(ex.Message);
                 return null;
             }
-            finally
-            {
-                bmp388.Dispose();
-                bmp388 = null;
-            }
         }
 
-        private void ReadCoefficients(I2cDevice bmp388)
+        protected override Task PostInitialize()
         {
-            var calibrationData = ReadRegister(bmp388, Registers.CalibrationData, 21);
+            ReadCoefficients();
+
+            return Task.CompletedTask;
+        }
+
+
+
+        private void ReadCoefficients()
+        {
+            var calibrationData = ReadRegisterBytes((byte)Registers.CalibrationData, 21);
             _coefficients.T1 = ((ushort)(calibrationData[0] + (calibrationData[1] << 8))) / Math.Pow(2, -8);
             _coefficients.T2 = ((ushort)(calibrationData[2] + (calibrationData[3] << 8))) / Math.Pow(2, 30);
             _coefficients.T3 = ((sbyte)calibrationData[4]) / Math.Pow(2, 48);
@@ -180,42 +165,5 @@ namespace Fphi.CabinPi.Background.Sensors
             _coefficients.P11 = ((sbyte)calibrationData[20]) / Math.Pow(2, 65);
         }
 
-        private void WriteRegister(I2cDevice device, Registers register, byte data)
-        {
-            byte[] inputBuffer = new byte[2];
-            //byte[] outputBuffer = new byte[2];
-
-            inputBuffer[0] = (byte)register;
-            inputBuffer[1] = data;
-
-            device.Write(inputBuffer);
-
-            //ushort result = (ushort)((outputBuffer[0] << 8) + outputBuffer[1]);
-
-            Debug.WriteLine($"Wrote {data:x} to {register}.");
-
-        }
-
-        private byte ReadByte(I2cDevice device, Registers register)
-        {
-            return ReadRegister(device, register, 1)[0];
-        }
-
-        private byte[] ReadRegister(I2cDevice device, Registers register, int count)
-        {
-            byte[] inputBuffer = new byte[] { (byte)register };
-            byte[] outputBuffer = new byte[count];
-
-            device.WriteRead(inputBuffer, outputBuffer);
-
-            Debug.WriteLine($"Read {outputBuffer:x} from {register}.");
-
-            return outputBuffer;
-        }
-
-        public async Task InitializeAsync()
-        {
-
-        }
     }
 }

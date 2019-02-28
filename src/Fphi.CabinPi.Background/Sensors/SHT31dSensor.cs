@@ -9,12 +9,15 @@ using Windows.Devices.I2c;
 
 namespace Fphi.CabinPi.Background.Sensors
 {
-    class SHT31dSensor : ISensor
+    class SHT31dSensor : I2CSensor
     {
+        private const int DefaultAddress = 0x44;
+
         private const ushort HT31_MEAS_HIGHREP_STRETCH = 0x2C06;
         private const ushort SHT31_MEAS_MEDREP_STRETCH = 0x2C0D;
         private const ushort SHT31_MEAS_LOWREP_STRETCH = 0x2C10;
-        private byte[] SHT31_MEAS_HIGHREP = new byte[] { 0x24, 0x00 };
+        //private byte[] SHT31_MEAS_HIGHREP = new byte[] { 0x24, 0x00 };
+        private const ushort SHT31_MEAS_HIGHREP = 0x2400;
         private const ushort SHT31_MEAS_MEDREP = 0x240B;
         private const ushort SHT31_MEAS_LOWREP = 0x2416;
         private const ushort SHT31_READSTATUS = 0xF32D;
@@ -31,54 +34,38 @@ namespace Fphi.CabinPi.Background.Sensors
         private const ushort SHT31_STATUS_HEATER_ACTIVE = 0x2000;
         private const ushort SHT31_STATUS_ALERT_PENDING = 0x8000;
 
-        public string Name { get; set; }
 
-        public async Task<IEnumerable<SensorReading>> GetReadingsAsync()
+        public SHT31dSensor()
         {
-            I2cDevice sht31d = null;
-            try
+            Address = DefaultAddress;
+        }
+
+
+        protected override async Task<IEnumerable<SensorReading>> GetI2CReadingsAsync()
+        {
+            
+            Write(SHT31_MEAS_HIGHREP);
+            await Task.Delay(15);
+            var buffer = ReadBytes(6);
+            //sht31d.WriteRead(SHT31_MEAS_HIGHREP, buffer);
+
+            if (CRC8(new byte[] { buffer[0], buffer[1] }) != buffer[2])
             {
+                throw new InvalidOperationException("CRC Mismatch");
+            }
+            double rawTemperature = buffer[0] << 8 | buffer[1];
+            double temperatureC = 175.0 * rawTemperature / 0xFFFF - 45.0;
+            double temperatureF = 315.0 * rawTemperature / 0xFFFF - 49.0;
 
-                string i2cDeviceSelector = I2cDevice.GetDeviceSelector();
-                IReadOnlyList<DeviceInformation> devices = await DeviceInformation.FindAllAsync(i2cDeviceSelector);
-
-
-                var connectionSettings = new I2cConnectionSettings(0x44); //Default address
-
-                // If this next line crashes with an ArgumentOutOfRangeException,
-                // then the problem is that no I2C devices were found.
-                //
-                // If the next line crashes with Access Denied, then the problem is
-                // that access to the I2C device (HTU21D) is denied.
-                //
-                // The call to FromIdAsync will also crash if the settings are invalid.
-                //
-                // FromIdAsync produces null if there is a sharing violation on the device.
-                // This will result in a NullReferenceException in Timer_Tick below.
-                sht31d = await I2cDevice.FromIdAsync(devices[0].Id, connectionSettings);
-                byte[] buffer = new byte[6];
-                sht31d.Write(SHT31_MEAS_HIGHREP);
-                await Task.Delay(15);
-                sht31d.Read(buffer);
-                //sht31d.WriteRead(SHT31_MEAS_HIGHREP, buffer);
-
-                if (CRC8(new byte[] { buffer[0], buffer[1] }) != buffer[2])
-                {
-                    throw new InvalidOperationException("CRC Mismatch");
-                }
-                double rawTemperature = buffer[0] << 8 | buffer[1];
-                double temperatureC = 175.0 * rawTemperature / 0xFFFF - 45.0;
-                double temperatureF = 315.0 * rawTemperature / 0xFFFF - 49.0;
-
-                if (CRC8(new byte[] { buffer[3], buffer[4] }) != buffer[5])
-                {
-                    throw new InvalidOperationException("CRC Mismatch");
-                }
-                double rawHumidity = buffer[3] << 8 | buffer[4];
-                double humidity = 100.0 * rawHumidity / 0xFFFF;
+            if (CRC8(new byte[] { buffer[3], buffer[4] }) != buffer[5])
+            {
+                throw new InvalidOperationException("CRC Mismatch");
+            }
+            double rawHumidity = buffer[3] << 8 | buffer[4];
+            double humidity = 100.0 * rawHumidity / 0xFFFF;
 
 
-                return new SensorReading[] {
+            return new SensorReading[] {
                 new SensorReading
                 {
                     Type= Common.SensorType.InteriorTemperatureC,
@@ -101,20 +88,6 @@ namespace Fphi.CabinPi.Background.Sensors
                      Value=humidity
                 }
             };
-
-                // Start the polling timer.
-            }
-            catch (Exception ex)
-            {
-
-                Debug.WriteLine(ex.Message);
-                return null;
-            }
-            finally
-            {
-                sht31d.Dispose();
-                sht31d = null;
-            }
         }
 
         private byte CRC8(byte[] buffer)
@@ -141,9 +114,7 @@ namespace Fphi.CabinPi.Background.Sensors
             return (byte)(crc & 0xFF);
         }
 
-        public async Task InitializeAsync()
-        {
-            
-        }
+
+
     }
 }

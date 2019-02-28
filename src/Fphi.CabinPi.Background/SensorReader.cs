@@ -69,6 +69,9 @@ namespace Fphi.CabinPi.Background
                     _sensors.Add(newSensor);
                 }
             }
+            //var newSensor2 = new BMP388Sensor() { Name = "BMP388" };
+            //await newSensor2.InitializeAsync();
+            //_sensors.Add(newSensor2);
 
         }
 

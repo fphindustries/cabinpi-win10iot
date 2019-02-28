@@ -12,7 +12,7 @@ namespace Fphi.CabinPi.Background.Sensors
 {
     class CurrentOverflowException : Exception { }
 
-    class INA219Sensor : ISensor
+    class INA219Sensor : I2CSensor
     {
 
         private const ushort ResetConfiguration = 32768; //bit 15
@@ -223,7 +223,6 @@ namespace Fphi.CabinPi.Background.Sensors
         private const int DefaultAddress = 0x40;
         private readonly double _shuntOhms;
         private readonly double _maxExpectedAmps;
-        private readonly int _address;
         private double _minDeviceCurrentLsb;
         private Gain _gain;
         private bool _autoGainEnabled;
@@ -231,49 +230,24 @@ namespace Fphi.CabinPi.Background.Sensors
 
         private VoltageRange _voltageRange;
 
-        private I2cDevice _device;
         private double _powerLsb;
 
-
-        public string Name { get; set; }
-
-        public async Task<IEnumerable<SensorReading>> GetReadingsAsync()
+        protected override Task PostInitialize()
         {
-            try
-            {
+            Reset();
+            Configure();
+            return Task.CompletedTask;
+        }
 
-                string i2cDeviceSelector = I2cDevice.GetDeviceSelector();
-                IReadOnlyList<DeviceInformation> devices = await DeviceInformation.FindAllAsync(i2cDeviceSelector);
+        protected override async Task<IEnumerable<SensorReading>> GetI2CReadingsAsync()
+        {
+            double shuntVoltage = ReadRegister(Registers.ShuntVoltage) * ShuntMillivoltsLsb;
+            double busVoltage = (ReadRegister(Registers.BusVoltage) >> 3) * BusMillivoltsLsb / 1000D;
+            double power = ReadRegister(Registers.Power) * _powerLsb * 1000D;
+            double current = ReadRegister(Registers.Current) * _currentLsb * 1000D;
+            double supplyVoltage = busVoltage + (shuntVoltage / 1000D);
 
-
-                var connectionSettings = new I2cConnectionSettings(_address); //Default address
-
-                // If this next line crashes with an ArgumentOutOfRangeException,
-                // then the problem is that no I2C devices were found.
-                //
-                // If the next line crashes with Access Denied, then the problem is
-                // that access to the I2C device (HTU21D) is denied.
-                //
-                // The call to FromIdAsync will also crash if the settings are invalid.
-                //
-                // FromIdAsync produces null if there is a sharing violation on the device.
-                // This will result in a NullReferenceException in Timer_Tick below.
-                _device = await I2cDevice.FromIdAsync(devices[0].Id, connectionSettings);
-
-                Reset();
-
-                var configuration = ReadRegister(Registers.Configuration);
-                var calibration = ReadRegister(Registers.Calibration);
-                Configure();
-
-
-                double shuntVoltage = ReadRegister(Registers.ShuntVoltage) * ShuntMillivoltsLsb;
-                double busVoltage = (ReadRegister(Registers.BusVoltage) >> 3) * BusMillivoltsLsb / 1000D;
-                double power = ReadRegister(Registers.Power) * _powerLsb * 1000D;
-                double current = ReadRegister(Registers.Current) * _currentLsb * 1000D;
-                double supplyVoltage = busVoltage + (shuntVoltage / 1000D);
-
-                return new SensorReading[] {
+            return new SensorReading[] {
                 new SensorReading
                 {
                     Type= Common.SensorType.BusVoltage,
@@ -310,40 +284,19 @@ namespace Fphi.CabinPi.Background.Sensors
                      Value=supplyVoltage
                 }
             };
-            }
-            catch (Exception ex)
-            {
-
-                Debug.WriteLine(ex.Message);
-                return null;
-            }
-            finally
-            {
-                _device.Dispose();
-                _device = null;
-            }
-
         }
-
 
 
         public INA219Sensor(double shuntOhms, double maxExpectedAmps = 0D, int address = DefaultAddress)
         {
             _shuntOhms = shuntOhms;
             _maxExpectedAmps = maxExpectedAmps;
-            _address = address;
+            Address = address;
 
             _minDeviceCurrentLsb = CalculateMinCurrentLsb();
             _autoGainEnabled = false;
-
-
-
         }
 
-        public async Task InitializeAsync()
-        {
-
-        }
 
         /// <summary>
         /// Configures and calibrates how the INA219 will take measurements.
@@ -580,33 +533,14 @@ namespace Fphi.CabinPi.Background.Sensors
 
         private ushort WriteRegister(Registers register, ushort data)
         {
-            byte[] inputBuffer = new byte[3];
-            byte[] outputBuffer = new byte[2];
-
-            inputBuffer[0] = (byte)register;
-            inputBuffer[1] = (byte)(data >> 8);
-            inputBuffer[2] = (byte)data;
-
-            _device.WriteRead(inputBuffer, outputBuffer);
-
-            ushort result = (ushort)((outputBuffer[0] << 8) + outputBuffer[1]);
-
-            Debug.WriteLine($"Wrote {data:x} to {register}. Result: {result:x}");
-            return result;
-
+            return WriteReadRegister((byte)register, data);
         }
 
         private ushort ReadRegister(Registers register)
         {
-            byte[] inputBuffer = new byte[] { (byte)register };
-            byte[] outputBuffer = new byte[2];
-
-            _device.WriteRead(inputBuffer, outputBuffer);
-            ushort result = (ushort)((outputBuffer[0] << 8) + outputBuffer[1]);
-
-            Debug.WriteLine($"Read {result:x} from register {register}");
-            return result;
-
+            return ReadUShortRegister((byte)register);
         }
+
+
     }
 }
