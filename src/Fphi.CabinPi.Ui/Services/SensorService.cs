@@ -60,6 +60,14 @@ namespace Fphi.CabinPi.Ui.Services
             set { Set(ref _interiorHumidity, value); }
         }
 
+        private SensorReading _current = new SensorReading()
+            {Sensor = SensorId.FakeINA219, Type = SensorType.Current, Value = 0};
+
+        public SensorReading Current
+        {
+            get { return _current;  }
+            set { Set(ref _current, value);}
+        }
 
 
         public SensorService(DataService dataService)
@@ -112,6 +120,8 @@ namespace Fphi.CabinPi.Ui.Services
             {
                 case SensorType.InteriorTemperatureF:
                     return  InteriorTemperatureF.Value;
+                case SensorType.Current:
+                    return Current.Value;
                 default:
                     return 50;
                     
@@ -142,6 +152,9 @@ namespace Fphi.CabinPi.Ui.Services
                                 break;
                             case SensorType.InteriorHumidity:
                                 InteriorHumidity = sensorReading;
+                                break;
+                            case SensorType.Current:
+                                Current = sensorReading;
                                 break;
                             default:
                                 break;

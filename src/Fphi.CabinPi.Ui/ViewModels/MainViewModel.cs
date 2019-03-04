@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using Fphi.CabinPi.Common;
 using Fphi.CabinPi.Common.Services;
 using LiveCharts;
 using LiveCharts.Defaults;
@@ -35,7 +36,6 @@ namespace Fphi.CabinPi.Ui.ViewModels
         }
 
         public SeriesCollection LastHourSeries { get; set; }
-        private double _trend;
 
         // public DarkSkyService.Forecast Forecast => _darkSkyService.CurrentForecast;
 
@@ -68,40 +68,25 @@ namespace Fphi.CabinPi.Ui.ViewModels
                 {
                     Values = new ChartValues<ObservableValue>
                     {
-                        new ObservableValue(3),
-                        new ObservableValue(5),
-                        new ObservableValue(6),
-                        new ObservableValue(7),
-                        new ObservableValue(3),
-                        new ObservableValue(4),
-                        new ObservableValue(2),
-                        new ObservableValue(5),
-                        new ObservableValue(8),
-                        new ObservableValue(3),
-                        new ObservableValue(5),
-                        new ObservableValue(6),
-                        new ObservableValue(7),
-                        new ObservableValue(3),
-                        new ObservableValue(4),
-                        new ObservableValue(2),
-                        new ObservableValue(5),
-                        new ObservableValue(8)
+                       
                     }
                 }
             };
 
-
-            _timer.Tick += (sender, o) =>
-            {
-                var r = new Random();
-
-                _trend += (r.NextDouble() > 0.3 ? 1 : -1) * r.Next(0, 5);
-                LastHourSeries[0].Values.Add(new ObservableValue(_trend));
-                LastHourSeries[0].Values.RemoveAt(0);
-                SetReading();
-            };
+            _timer.Tick += _timer_InvalidateData;
             _timer.Start();
+        }
 
+        private void _timer_InvalidateData(object sender, object e)
+        {
+            InvalidateData();
+        }
+
+        public async void InvalidateData()
+        {
+            InsideTemperature = await _temperatureDescriber.GetTemperature();
+            OutsideWeather = await _weatherDescriber.GetWeather();
+            await UpdateCurrentData();
         }
 
         private double _lastReading;
@@ -115,18 +100,6 @@ namespace Fphi.CabinPi.Ui.ViewModels
             }
         }
 
-
-        private async void SetReading()
-        {
-            var target = ((ChartValues<ObservableValue>)LastHourSeries[0].Values).Last().Value;
-            var step = (target - _lastReading) / 4;
-
-            await Task.Delay(100);
-            LastReading += step;
-
-            LastReading = target;
-        }
-
         private void OnUpdateCommand()
         {
             throw new NotImplementedException();
@@ -136,18 +109,23 @@ namespace Fphi.CabinPi.Ui.ViewModels
         {
             try
             {
-                //await _darkSkyService.GetForecast();GetTemperature
-                InsideTemperature = await _temperatureDescriber.GetTemperature();
-                OutsideWeather = await _weatherDescriber.GetWeather();
-
+                InvalidateData();
             }
             catch (Exception ex)
             {
                 var dialog = new MessageDialog(ex.Message);
                 await dialog.ShowAsync();
             }
-
-
         }
+
+        public async Task UpdateCurrentData()
+        {
+            var lastReading = _sensorService.GetReading(SensorType.Current);
+            LastHourSeries[0].Values.Add(new ObservableValue(lastReading));
+            LastHourSeries[0].Values.RemoveAt(0);
+            LastReading = lastReading;
+        }
+
+
     }
 }
