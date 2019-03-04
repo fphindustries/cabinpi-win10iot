@@ -105,6 +105,7 @@
     <Compile Include="ISensorDataStore.cs" />
     <Compile Include="ISensorFactory.cs" />
     <Compile Include="SensorReader.cs" />
+    <Compile Include="Sensors\I2CSensor.cs" />
     <Compile Include="Sensors\INA219Sensor.cs" />
     <Compile Include="Sensors\SensorFactory.cs" />
     <Compile Include="Sensors\BMP388Sensor.cs" />
