@@ -35,9 +35,14 @@ namespace Fphi.CabinPi.Ui.ViewModels
             set { Set(ref _outsideWeather, value); }
         }
 
+        //current power being used.
+        //new values go in the front
         public SeriesCollection LastHourSeries { get; set; }
 
-        // public DarkSkyService.Forecast Forecast => _darkSkyService.CurrentForecast;
+        //By day the last 7 average power used per day
+        public ChartValues<double> ConsumptionVals { get; set; }
+
+        public double Nan { get; set; }
 
         private readonly ISensorService _sensorService;
         private readonly IWeatherService _darkSkyService;
@@ -46,7 +51,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
         private readonly ISettings _settings;
 
         public RelayCommand UpdateCommand { get; private set; }
-        private DispatcherTimer _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
+        private DispatcherTimer _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
 
 
         public MainViewModel(ISensorService sensorService, IWeatherService darkSkyService,
@@ -68,13 +73,20 @@ namespace Fphi.CabinPi.Ui.ViewModels
                 {
                     Values = new ChartValues<ObservableValue>
                     {
-                       
+                        
                     }
                 }
             };
 
+            for(int i = 0; i < 10; i++)
+            {
+                LastHourSeries[0].Values.Add(new ObservableValue(0));
+            }
+
             _timer.Tick += _timer_InvalidateData;
             _timer.Start();
+            Nan = double.NaN;
+            ConsumptionVals = new ChartValues<double> { 5, 9, 8, 6, 1, 5, 7, 3, 6, 3 };
         }
 
         private void _timer_InvalidateData(object sender, object e)
@@ -102,7 +114,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
 
         private void OnUpdateCommand()
         {
-            throw new NotImplementedException();
+            InvalidateData();
         }
 
         public async Task InitializeAsync()

@@ -91,7 +91,7 @@
             <Border Grid.Row="0" Grid.RowSpan="4" Background="White" />
             <Border Grid.Row="0" Grid.RowSpan="3" Background="#EB5A13" ></Border>
             <TextBlock Grid.Row="0" TextAlignment="Center" Padding="10, 10, 0, 5" Foreground="White" FontSize="18">
-                    Time Power
+                    Power Usage (Last 7 Days)
             </TextBlock>
             <Button Grid.Row="3" Width="40" Height="40" VerticalAlignment="Top" 
                     HorizontalAlignment="Right" Margin="20, -20" Canvas.ZIndex="1"
@@ -110,16 +110,16 @@
                 </Button.Template>
             </Button>
             <lvc:CartesianChart Name="TimePowerChart" Grid.Row="2" Margin="10, 0, 10, 20"  Hoverable="False" DataTooltip="{x:Null}">
-                <!--<lvc:CartesianChart.Series>
-                    <lvc:ColumnSeries Values="{Binding Vals}"/>
-                </lvc:CartesianChart.Series>-->
-                <!--<lvc:CartesianChart.AxisY>
+                <lvc:CartesianChart.Series>
+                    <lvc:ColumnSeries Values="{Binding ConsumptionVals}"/>
+                </lvc:CartesianChart.Series>
+                <lvc:CartesianChart.AxisY>
                     <lvc:Axis IsMerged="True" MaxValue="10">
                         <lvc:Axis.Separator>
                             <lvc:Separator IsEnabled="true" Step="{Binding Nan}"></lvc:Separator>
                         </lvc:Axis.Separator>
                     </lvc:Axis>
-                </lvc:CartesianChart.AxisY>-->
+                </lvc:CartesianChart.AxisY>
             </lvc:CartesianChart>
             <StackPanel Grid.Row="3" VerticalAlignment="Center" Margin="25, 0">
                 <TextBlock Opacity=".4" FontSize="13">The Last 12 hours average <LineBreak /> Electricity Consumption</TextBlock>

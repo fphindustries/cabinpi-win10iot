@@ -18,6 +18,7 @@ namespace Fphi.Cabin.Pi.Common.Services
     {
         ISettings _settings;
         ISensorService _sensorService;
+        private Temperature _cachedTemperature;
 
         private double defaultTemp = 50;
         public TemperatureDescriber(ISettings settings, ISensorService sensorService)
@@ -29,7 +30,10 @@ namespace Fphi.Cabin.Pi.Common.Services
         public async Task<Temperature> GetTemperature()
         { 
             //internal
+            
             var temp =  _sensorService.GetReading(SensorType.InteriorTemperatureF);
+            var temperature = Temperature.GetTemperature(temp);
+            
             return await Task.FromResult<Temperature>(Temperature.GetTemperature(temp));
 
         }
