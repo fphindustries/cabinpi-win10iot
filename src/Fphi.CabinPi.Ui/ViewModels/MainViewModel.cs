@@ -49,20 +49,21 @@ namespace Fphi.CabinPi.Ui.ViewModels
         private readonly ITemperatureDescriber _temperatureDescriber;
         private readonly IWeatherDescriber _weatherDescriber;
         private readonly ISettings _settings;
+        private readonly IDataService _dataService;
 
         public RelayCommand UpdateCommand { get; private set; }
         private DispatcherTimer _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
 
 
         public MainViewModel(ISensorService sensorService, IWeatherService darkSkyService,
-            ITemperatureDescriber temperatureDescriber, IWeatherDescriber weatherDescriber, ISettings settings)
+            ITemperatureDescriber temperatureDescriber, IWeatherDescriber weatherDescriber, ISettings settings, IDataService dataService)
         {
             _sensorService = sensorService;
             _settings = settings;
             _darkSkyService = darkSkyService;
             _temperatureDescriber = temperatureDescriber;
             _weatherDescriber = weatherDescriber;
-
+            _dataService = dataService;
 
 
             UpdateCommand = new RelayCommand(OnUpdateCommand);
@@ -86,7 +87,6 @@ namespace Fphi.CabinPi.Ui.ViewModels
             _timer.Tick += _timer_InvalidateData;
             _timer.Start();
             Nan = double.NaN;
-            ConsumptionVals = new ChartValues<double> { 5, 9, 8, 6, 1, 5, 7, 3, 6, 3 };
         }
 
         private void _timer_InvalidateData(object sender, object e)
@@ -99,6 +99,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
             InsideTemperature = await _temperatureDescriber.GetTemperature();
             OutsideWeather = await _weatherDescriber.GetWeather();
             await UpdateCurrentData();
+            ConsumptionVals = new ChartValues<double>(await _dataService.GetHourlyUsageAverages(DateTime.Now));
         }
 
         private double _lastReading;

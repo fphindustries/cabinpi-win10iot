@@ -24,7 +24,7 @@ namespace Fphi.CabinPi.Ui.Services
     public class SensorService : Observable, ISensorService
     {
         private AppServiceConnection _backgroundAppService;
-        private readonly DataService _dataService;
+        private readonly IDataService _dataService;
 
         private ObservableCollection<SensorConfiguration> _sensorConfigurations = new ObservableCollection<SensorConfiguration>();
 
@@ -70,7 +70,7 @@ namespace Fphi.CabinPi.Ui.Services
         }
 
 
-        public SensorService(DataService dataService)
+        public SensorService(IDataService dataService)
         {
             _dataService = dataService;
             _connected = false;

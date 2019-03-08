@@ -49,7 +49,7 @@ namespace Fphi.CabinPi.Ui.ViewModels
             serviceCollection.AddSingleton<ThemeSelectorService>();
 
             //TODO: for design time editing, need to extract an interface
-            serviceCollection.AddSingleton<DataService>();
+            serviceCollection.AddSingleton<IDataService, DataService>();
             serviceCollection.AddSingleton<ISettings, SettingsService>();
             serviceCollection.AddSingleton<IWeatherService, DarkSkyService>();
             serviceCollection.AddSingleton<ITemperatureDescriber, TemperatureDescriber>();
